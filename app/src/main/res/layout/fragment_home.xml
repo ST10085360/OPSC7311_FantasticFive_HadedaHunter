@@ -43,114 +43,140 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/WeatherLayout"
-            android:layout_width="350sp"
-            android:layout_height="222dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="50sp"
-            android:background="@drawable/weathertile"
-            android:orientation="horizontal">
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="154dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="20dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/txtLocation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text=""
-                    android:textColor="#FBFBFB"
-                    android:textSize="24sp" />
+                android:id="@+id/WeatherLayout"
+                android:layout_width="350sp"
+                android:layout_height="178dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="35dp"
+                android:background="@drawable/weathertile"
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:orientation="horizontal">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-                    <ImageView
-                        android:id="@+id/imgCondition"
-                        android:layout_width="25sp"
-                        android:layout_height="25sp"
-                        android:layout_marginLeft="30sp"
-                        android:layout_marginTop="5sp"
-                        android:layout_weight="1"
-                        app:srcCompat="@drawable/concloudy"
-                        tools:srcCompat="@drawable/concloudy" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="97dp"
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/txtTemp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textColor="#FBFBFB"
-                        android:textSize="30sp"
-                        android:textStyle="bold" />
+                        <LinearLayout
+                            android:layout_width="181dp"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/txtLocation"
+                                android:layout_width="match_parent"
+                                android:layout_height="43dp"
+                                android:layout_gravity="center_horizontal"
+                                android:gravity="center"
+                                android:text="Gqeberha"
+                                android:textColor="#FBFBFB"
+                                android:textSize="24sp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/imgCondition"
+                                    android:layout_width="1dp"
+                                    android:layout_height="25sp"
+                                    android:layout_marginLeft="30sp"
+                                    android:layout_marginTop="5sp"
+                                    android:layout_weight="1"
+                                    app:srcCompat="@drawable/concloudy"
+                                    tools:srcCompat="@drawable/concloudy" />
+
+                                <TextView
+                                    android:id="@+id/txtTemp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:textColor="#FBFBFB"
+                                    android:textSize="30sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView2"
+                                android:layout_width="match_parent"
+                                android:layout_height="60dp"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="10dp"
+                                android:text="Bird Watching Conditions"
+                                android:textAlignment="center"
+                                android:textColor="#FBFBFB"
+                                android:textSize="20sp" />
+
+                            <TextView
+                                android:id="@+id/txtWatchingCondition2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:text="76%"
+                                android:textAlignment="center"
+                                android:textColor="#FBFBFB"
+                                android:textSize="20sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="left"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/txtHighLow"
+                                android:layout_width="289dp"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center|top"
+                                android:layout_marginLeft="10dp"
+                                android:layout_weight="1"
+                                android:gravity="left|center_vertical"
+                                android:text="22 / 19"
+                                android:textColor="#FBFBFB"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/txtCondition"
+                                android:layout_width="282dp"
+                                android:layout_height="80dp"
+                                android:layout_gravity="left"
+                                android:layout_marginLeft="35dp"
+                                android:layout_marginTop="0dp"
+                                android:layout_marginBottom="20dp"
+                                android:layout_weight="1"
+                                android:gravity="left"
+                                android:text="Partly CLoudy"
+                                android:textColor="#FBFBFB"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="110sp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/txtHighTemp"
-                        android:layout_width="4dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:textColor="#FBFBFB"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/txtCondition"
-                        android:layout_width="60sp"
-                        android:layout_height="100dp"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="20dp"
-                        android:layout_weight="1"
-                        android:textColor="#FBFBFB"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="20dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textView10"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="Bird Watching Conditions"
-                    android:textAlignment="center"
-                    android:textColor="#FBFBFB"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/txtWatchingCondition"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="15sp"
-                    android:text="76%"
-                    android:textAlignment="center"
-                    android:textColor="#FBFBFB"
-                    android:textSize="20sp" />
             </LinearLayout>
         </LinearLayout>
-
 
 
         <LinearLayout

@@ -62,7 +62,7 @@ class HomeFragment : Fragment() {
                 Handler(Looper.getMainLooper()).post {
                     binding.txtLocation.text = shortCityName
                     binding.txtTemp.text = "${currentTempInt}°C"
-                    binding.txtHighTemp.text = "${highTempInt}°/${lowTempInt}°"
+                    binding.txtHighLow.text = "${highTempInt}°/${lowTempInt}°"
                     binding.txtCondition.text = description
                     binding.txtCurrentDate.text = currentDate
 
