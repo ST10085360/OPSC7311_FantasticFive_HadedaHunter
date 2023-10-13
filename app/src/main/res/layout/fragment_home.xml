@@ -20,10 +20,10 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/txtDate"
+                android:id="@+id/txtCurrentDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Fri, 15 September" />
+                android:text="Current Date" />
 
             <TextView
                 android:id="@+id/txtGreeting"
@@ -45,7 +45,7 @@
         <LinearLayout
             android:id="@+id/WeatherLayout"
             android:layout_width="350sp"
-            android:layout_height="144dp"
+            android:layout_height="222dp"
             android:layout_gravity="center"
             android:layout_marginTop="50sp"
             android:background="@drawable/weathertile"
@@ -64,7 +64,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="Gqeberha"
+                    android:text=""
                     android:textColor="#FBFBFB"
                     android:textSize="24sp" />
 
@@ -88,16 +88,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="22°"
                         android:textColor="#FBFBFB"
                         android:textSize="30sp"
-                        android:textStyle="bold"
-                        tools:text="22°" />
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="30sp"
+                    android:layout_height="110sp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -106,17 +104,16 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:text="22°/19°"
                         android:textColor="#FBFBFB"
                         android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/txtCondition"
-                        android:layout_width="25sp"
-                        android:layout_height="wrap_content"
+                        android:layout_width="60sp"
+                        android:layout_height="100dp"
                         android:layout_gravity="center"
+                        android:layout_marginTop="20dp"
                         android:layout_weight="1"
-                        android:text="Partly Cloudy"
                         android:textColor="#FBFBFB"
                         android:textSize="14sp" />
                 </LinearLayout>
@@ -153,6 +150,8 @@
                     android:textSize="20sp" />
             </LinearLayout>
         </LinearLayout>
+
+
 
         <LinearLayout
             android:layout_width="350sp"
