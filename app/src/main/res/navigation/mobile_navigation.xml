@@ -12,14 +12,13 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.hadedahunter.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
-
+        android:id="@+id/navigation_account"
+        android:name="com.example.hadedahunter.AccountFragment"
+        android:label="title_account"
+        tools:layout="@layout/fragment_account" />
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.hadedahunter.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_catalogue"
+        android:name="com.example.hadedahunter.CatalogueFragment"
+        android:label="fragment_catalogue"
+        tools:layout="@layout/fragment_catalogue" />
 </navigation>
