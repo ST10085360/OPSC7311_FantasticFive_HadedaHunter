@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/blue_bng">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/hadedaTextView"
+        android:text="@string/hadeda_heading"
+        android:textStyle="bold"
+        android:textSize="50dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:layout_margin="20dp"/>
+
+    <ImageView
+        android:id="@+id/hadedaLogo"
+        android:layout_width="250dp"
+        android:layout_height="200dp"
+        android:background="@drawable/hadedalogo2"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/hadedaTextView"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/hunterHeading"
+        android:layout_below="@id/hadedaLogo"
+        android:text="@string/hunter_heading"
+        android:textSize="50dp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:layout_centerHorizontal="true"/>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="16dp">
+
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:text="Login"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            android:padding="5dp"
+            android:backgroundTint="#A8A4E6"
+            android:layout_gravity="center"
+            android:layout_marginTop="400dp"/>
+        <Button
+            android:id="@+id/btnRegister"
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:text="Register"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            android:padding="5dp"
+            android:backgroundTint="#594969"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/birds"
+            android:id="@+id/birdsFlocking"/>
+    </LinearLayout>
+
+</RelativeLayout>
