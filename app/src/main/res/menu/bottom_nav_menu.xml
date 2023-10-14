@@ -12,6 +12,11 @@
         android:title="@string/title_catalogue" />
 
     <item
+        android:id="@+id/navigation_hotspots"
+        android:icon="@drawable/baseline_fire_24"
+        android:title="@string/title_hotspots" />
+
+    <item
         android:id="@+id/navigation_account"
         android:icon="@drawable/ic_notifications_black_24dp"
         android:title="@string/title_account" />
