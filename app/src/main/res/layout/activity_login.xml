@@ -112,7 +112,8 @@
                 android:textColorHint="#B8B6B6"
                 android:background="@drawable/edit_text_background"
                 android:drawableStart="@drawable/baseline_lock_24"
-                android:drawablePadding="10dp"/>
+                android:drawablePadding="10dp"
+                android:inputType="textPassword"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnLogin"
