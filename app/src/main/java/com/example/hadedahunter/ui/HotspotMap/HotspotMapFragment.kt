@@ -2,6 +2,7 @@ package com.example.hadedahunter.ui.HotspotMap
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,12 +21,17 @@ import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.Polyline
 import java.io.IOException
 import com.google.maps.DirectionsApi
 import com.google.maps.GeoApiContext
-import com.google.maps.model.DirectionsResult
-import com.google.maps.model.TravelMode
-import com.google.maps.model.Unit
+import com.google.android.gms.maps.model.PolylineOptions
+import com.google.maps.android.PolyUtil
+import org.json.JSONArray
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.net.HttpURLConnection
+import java.net.URL
 
 class HotspotMapFragment : Fragment(), OnMapReadyCallback {
 
@@ -33,6 +39,7 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var userLatitude: Double = 0.0
     private var userLongitude: Double = 0.0
+    private var currentPolyline: Polyline? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -66,27 +73,57 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback {
         ) {
             googleMap.isMyLocationEnabled = true
 
-            // Add markers here
-            val birdWatchingLocation1 = LatLng(-34.02527296584781, 25.70184460498627)
-            val birdWatchingLocation2 = LatLng(-34.00652418250723, 25.68701224180276)
-            val birdWatchingLocation3 = LatLng(-34.01052017217004, 25.36885805103418)
-            val birdWatchingLocation4 = LatLng(-33.97885448322565, 25.36737481471583)
-            val birdWatchingLocation5 = LatLng(-33.97599584324513, 25.462583545778575)
-            val birdWatchingLocation6 = LatLng(-33.95136504668145, 25.556310656925213)
-            val birdWatchingLocation7 = LatLng(-33.966457594930795, 25.60265922882768)
-            val birdWatchingLocation8 = LatLng(-33.95019135988834, 25.044963366121028)
-            val birdWatchingLocation9 = LatLng(-33.96828855348131, 25.578997313479825)
+            // Add markers from API
+            Thread {
+                try {
+                    val url =
+                        URL("https://api.ebird.org/v2/data/obs/geo/recent?lat=-34.0252729658478&lng=25.70184460498627&back=30&maxResults=100&includeProvisional=true&hotspot=true&sort=date&key=h0nip7qkvaqh")
+                    val connection = url.openConnection() as HttpURLConnection
+                    connection.requestMethod = "GET"
+                    val responseCode = connection.responseCode
 
-            // Add markers to the map
-            googleMap.addMarker(MarkerOptions().position(birdWatchingLocation1).title("Cape Recife Lighthouse"))
-            googleMap.addMarker(MarkerOptions().position(birdWatchingLocation2).title("SANCCOB Gqeberha"))
-            googleMap.addMarker(MarkerOptions().position(birdWatchingLocation3).title("Alan Tours"))
-            googleMap.addMarker(MarkerOptions().position(birdWatchingLocation4).title("The Island Nature Reserve"))
-            googleMap.addMarker(MarkerOptions().position(birdWatchingLocation5).title("Kragga Kamma Game Park"))
-            googleMap.addMarker(MarkerOptions().position(birdWatchingLocation6).title("Newton Park Nature Reserve"))
-            googleMap.addMarker(MarkerOptions().position(birdWatchingLocation7).title("Settlers Park Nature Reserve"))
-            googleMap.addMarker(MarkerOptions().position(birdWatchingLocation8).title("SloeJoe Birding"))
-            googleMap.addMarker(MarkerOptions().position(birdWatchingLocation9).title("Dodd's Farm"))
+                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                        val inputStream = connection.inputStream
+                        val reader = BufferedReader(InputStreamReader(inputStream))
+                        val response = StringBuilder()
+
+                        var line: String?
+                        while (reader.readLine().also { line = it } != null) {
+                            response.append(line)
+                        }
+
+                        reader.close()
+                        inputStream.close()
+
+                        val jsonArray = JSONArray(response.toString())
+                        for (i in 0 until jsonArray.length()) {
+                            val observation = jsonArray.getJSONObject(i)
+                            val locName = observation.getString("locName")
+                            val comName = observation.getString("comName")
+                            val lat = observation.getDouble("lat")
+                            val lng = observation.getDouble("lng")
+
+                            val observationLocation = LatLng(lat, lng)
+
+                            // Add a marker to the map
+                            requireActivity().runOnUiThread {
+                                googleMap.addMarker(
+                                    MarkerOptions()
+                                        .position(observationLocation)
+                                        .title("Location: $locName, Bird: $comName")
+                                )
+                            }
+                        }
+                    } else {
+                        // Handle HTTP error
+                        // You might want to show an error message to the user
+                    }
+
+                    connection.disconnect()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }.start()
 
             // Get the user's location
             fusedLocationClient.lastLocation.addOnSuccessListener { location ->
@@ -98,8 +135,22 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback {
 
                     // Set up marker click listener
                     googleMap.setOnMarkerClickListener { marker ->
-                        // Get the destination's latitude and longitude
+                        currentPolyline?.remove() // Remove previous polyline
+
+
                         val destination = marker.position
+                        val distance = calculateDistance(
+                            userLatitude,
+                            userLongitude,
+                            destination.latitude,
+                            destination.longitude
+                        )
+                        val formattedDistance = "%.2f".format(distance).toDouble()
+
+                        // Set title and snippet (distance) for the InfoWindow
+                        marker.title = "Hotspot: ${marker.title}"
+                        marker.snippet = "Distance: $formattedDistance km"
+                        marker.showInfoWindow()
 
                         // Calculate the route
                         val directions = GeoApiContext.Builder()
@@ -115,12 +166,22 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback {
                         try {
                             val result = request.await()
 
-                            // Process result to get the best route and display it to the user
                             if (result != null) {
                                 val bestRoute = result.routes[0]
                                 val steps = bestRoute.legs[0].steps
 
-                                // You can use 'steps' to get detailed steps of the route
+                                // Create a list of LatLng points for the route
+                                val routePoints = ArrayList<LatLng>()
+                                for (step in steps) {
+                                    routePoints.addAll(PolyUtil.decode(step.polyline.encodedPath))
+                                }
+
+                                // Draw the route on the map
+                                val polylineOptions = PolylineOptions()
+                                    .addAll(routePoints)
+                                    .color(Color.BLUE)
+                                    .width(8f)
+                                currentPolyline = googleMap.addPolyline(polylineOptions)
                             }
                         } catch (e: ApiException) {
                             e.printStackTrace()
@@ -130,13 +191,62 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback {
                             e.printStackTrace()
                         }
 
-                        true // Return true to indicate that the event is handled
+                        // Return true to indicate that the event is handled
+                        true
                     }
+
+                    googleMap.setOnInfoWindowClickListener { marker ->
+                        // Extract the information you want to pass to the new layout
+                        val hotspotName = marker.title
+                        val hotspotLocation = marker.position
+
+                        // Create a list of birds observed (you'll need to modify this based on your data structure)
+                        val birdsObserved = listOf(
+                            "Egyptian Goose",
+                            "Helmeted Guineafowl",
+                            // Add more observations as needed
+                        )
+
+                        // Create a new instance of HotspotInfoFragment
+                        val hotspotInfoFragment = HotspotInfoFragment().apply {
+                            arguments = Bundle().apply {
+                                putString("hotspotName", hotspotName)
+                                putParcelable("hotspotLocation", hotspotLocation)
+                                putStringArrayList("birdsObserved", ArrayList(birdsObserved))
+                            }
+                        }
+
+                        // Navigate to the new fragment
+                        requireActivity().supportFragmentManager.beginTransaction()
+                            .replace(R.id.container, hotspotInfoFragment) // Adjust the container ID if needed
+                            .addToBackStack(null)
+                            .commit()
+
+                        true
+                    }
+
                 }
             }
         }
     }
 
+
+
+    private fun calculateDistance(
+        startLatitude: Double,
+        startLongitude: Double,
+        endLatitude: Double,
+        endLongitude: Double
+    ): Double {
+        val earthRadius = 6371 // Radius of the earth in km
+        val dLat = Math.toRadians(endLatitude - startLatitude)
+        val dLng = Math.toRadians(endLongitude - startLongitude)
+        val a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(startLatitude)) * Math.cos(Math.toRadians(endLatitude)) *
+                Math.sin(dLng / 2) * Math.sin(dLng / 2)
+        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+        return earthRadius * c
+    }
 
     override fun onResume() {
         super.onResume()
