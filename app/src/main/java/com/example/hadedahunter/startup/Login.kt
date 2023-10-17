@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.hadedahunter.MainActivity
 import com.example.hadedahunter.R
+import com.example.hadedahunter.ui.HotspotMap.HotspotMapFragment
 
 class Login : AppCompatActivity() {
 
@@ -46,6 +47,7 @@ class Login : AppCompatActivity() {
                 {
                     Toast.makeText(this, "Login successful.", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this, MainActivity::class.java)
+
                     startActivity(intent)
                     finish()
                 }

@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
 
+
 //Adapter for the Catalogue Card View
 class CatalogueAdapter(private val context: Context, private val birds: List<Bird>) : RecyclerView.Adapter<CatalogueAdapter.ViewHolder>() {
 
