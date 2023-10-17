@@ -38,18 +38,18 @@
         app:layout_constraintEnd_toEndOf="@id/regCardView"
         app:layout_constraintStart_toStartOf="@id/regCardView"
         app:layout_constraintTop_toTopOf="@id/regCardView">
-        
+
         <LinearLayout
             android:id="@+id/logoLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/card_background">
-            
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/hadedalogo1"
-                android:padding="10dp"/>
+                android:padding="10dp"
+                android:src="@drawable/hadedalogo1" />
 
         </LinearLayout>
 
@@ -58,7 +58,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/regCardView"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
@@ -66,11 +66,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/regHeading">
-        
+
         <LinearLayout
             android:id="@+id/promptsLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="459dp"
             android:orientation="vertical">
 
             <TextView
@@ -78,53 +78,69 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="28dp"
+                android:layout_marginTop="50dp"
                 android:text="Register"
-                android:textSize="40dp"
-                android:textStyle="bold"
                 android:textColor="@color/black"
-                android:layout_marginTop="50dp"/>
+                android:textSize="40dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/nameEditTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/edit_text"
+                android:drawableStart="@drawable/baseline_person_24"
+                android:drawablePadding="10dp"
+                android:hint="@string/name"
+                android:padding="20dp"
+                android:textColor="@color/black"
+                android:textColorHint="#B8B6B6" />
 
             <EditText
                 android:id="@+id/emailEditTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/edit_text"
+                android:drawableStart="@drawable/baseline_email_24"
+                android:drawablePadding="10dp"
                 android:hint="@string/email"
                 android:padding="20dp"
                 android:textColor="@color/black"
-                android:textColorHint="#B8B6B6"
-                android:background="@drawable/edit_text_background"
-                android:drawableStart="@drawable/baseline_email_24"
-                android:drawablePadding="10dp"/>
+                android:textColorHint="#B8B6B6" />
 
             <EditText
                 android:id="@+id/passwordEditTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/edit_text"
+                android:drawableStart="@drawable/baseline_lock_24"
+                android:drawablePadding="10dp"
                 android:hint="@string/password"
+                android:inputType="textPassword"
                 android:padding="20dp"
                 android:textColor="@color/black"
-                android:textColorHint="#B8B6B6"
-                android:background="@drawable/edit_text_background"
-                android:drawableStart="@drawable/baseline_lock_24"
-                android:drawablePadding="10dp"/>
-            
+                android:textColorHint="#B8B6B6" />
+
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnRegister"
                 android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:background="@drawable/button_background"
+                android:background="@drawable/button_enabled"
                 android:text="Register"
-                android:textStyle="bold"
                 android:textColor="@color/white"
-                android:textSize="20dp"/>
+                android:textSize="20dp"
+                android:textStyle="bold" />
         </LinearLayout>
         
     </androidx.cardview.widget.CardView>

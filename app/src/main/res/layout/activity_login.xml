@@ -48,8 +48,8 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/hadedalogo1"
-                android:padding="10dp"/>
+                android:padding="10dp"
+                android:src="@drawable/hadedalogo1" />
 
         </LinearLayout>
 
@@ -89,30 +89,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/edit_text"
+                android:drawableStart="@drawable/baseline_email_24"
+                android:drawablePadding="10dp"
                 android:hint="@string/email"
                 android:padding="20dp"
                 android:textColor="@color/black"
-                android:textColorHint="#B8B6B6"
-                android:background="@drawable/edit_text_background"
-                android:drawableStart="@drawable/baseline_email_24"
-                android:drawablePadding="10dp"/>
+                android:textColorHint="#B8B6B6" />
 
             <EditText
                 android:id="@+id/passwordEditTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/edit_text"
+                android:drawableStart="@drawable/baseline_lock_24"
+                android:drawablePadding="10dp"
                 android:hint="@string/password"
                 android:padding="20dp"
                 android:textColor="@color/black"
-                android:textColorHint="#B8B6B6"
-                android:background="@drawable/edit_text_background"
-                android:drawableStart="@drawable/baseline_lock_24"
-                android:drawablePadding="10dp"/>
+                android:textColorHint="#B8B6B6" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnLogin"
@@ -120,11 +120,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:background="@drawable/button_background"
+                android:background="@drawable/button_enabled"
                 android:text="Login"
-                android:textStyle="bold"
                 android:textColor="@color/white"
-                android:textSize="20dp"/>
+                android:textSize="20dp"
+                android:textStyle="bold" />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
