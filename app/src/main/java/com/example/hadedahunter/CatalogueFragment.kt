@@ -1,59 +1,78 @@
 package com.example.hadedahunter
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [CatalogueFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class CatalogueFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var birdAdapter: CatalogueAdapter
+    private lateinit var rvBirds: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_catalogue, container, false)
+        val view = inflater.inflate(R.layout.fragment_catalogue, container, false)
+
+        rvBirds = view.findViewById(R.id.rvBirds)
+        rvBirds.layoutManager = LinearLayoutManager(context)
+
+        // Fetch bird data from Firebase (replace with your own code)
+        // Example:
+        val allBirdsInDb = fetchBirdDataFromFirebase()
+
+        birdAdapter = CatalogueAdapter(requireContext(), allBirdsInDb)
+        rvBirds.adapter = birdAdapter
+
+        return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CatalogueFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            CatalogueFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    // Replace this with your actual data retrieval logic from Firebase
+    private fun fetchBirdDataFromFirebase(): List<Bird> {
+        val birds = mutableListOf<Bird>()
+
+        // Replace with your Firebase database reference
+        val databaseReference = FirebaseDatabase.getInstance().reference.child("Birds")
+
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (birdSnapshot in dataSnapshot.children) {
+                    val birdName = birdSnapshot.key
+                    val scientificName =
+                        birdSnapshot.child("Scientific Name").getValue(String::class.java) ?: ""
+                    val size = birdSnapshot.child("Size").getValue(String::class.java) ?: ""
+                    val appearance = birdSnapshot.child("Appearance").getValue(String::class.java) ?: ""
+
+                    // Use a placeholder image resource ID
+                    val imageResource = R.drawable.bird_random
+
+                    val bird = birdName?.let { Bird(it, scientificName, size, appearance, imageResource) }
+                    if (bird != null) {
+                        birds.add(bird)
+                    }
                 }
+
+                // Update the RecyclerView with the retrieved data
+                birdAdapter.notifyDataSetChanged()
             }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Handle errors
+                Log.e("FetchBirdData", "Error fetching data: ${databaseError.message}")
+            }
+        })
+
+        return birds
     }
 }
