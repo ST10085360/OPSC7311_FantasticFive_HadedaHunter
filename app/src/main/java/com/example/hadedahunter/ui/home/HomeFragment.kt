@@ -29,6 +29,15 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root = binding.root
 
+        // Retrieve the user's name from the Intent extras
+        val userName = activity?.intent?.getStringExtra("userName")
+
+        // Make sure userName is not null before displaying it
+        if (userName != null) {
+            val greetingText = "$userName"
+            binding.txtName.text = greetingText
+        }
+
         // Make API request
         Thread {
             val url = URL("https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/Port%20Elizabeth/today?unitGroup=metric&include=current%2Cfcst&key=B5BW4SKEUJBJ27TLX8WXFHP9M&options=nonulls&contentType=json")

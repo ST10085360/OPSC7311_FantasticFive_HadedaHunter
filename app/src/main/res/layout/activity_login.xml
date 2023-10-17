@@ -112,7 +112,8 @@
                 android:hint="@string/password"
                 android:padding="20dp"
                 android:textColor="@color/black"
-                android:textColorHint="#B8B6B6" />
+                android:textColorHint="#B8B6B6"
+                android:inputType="textPassword"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnLogin"

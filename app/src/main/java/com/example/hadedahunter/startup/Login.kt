@@ -11,7 +11,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.hadedahunter.MainActivity
 import com.example.hadedahunter.R
-import com.example.hadedahunter.ui.HotspotMap.HotspotMapFragment
 
 class Login : AppCompatActivity() {
 
