@@ -20,7 +20,7 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-
+    private var currentTemp = 0.0;
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,7 +42,7 @@ class HomeFragment : Fragment() {
                 // Parse JSON response
                 val jsonObject = JSONObject(result)
                 val cityName = jsonObject.getString("resolvedAddress")
-                val currentTemp = jsonObject.getJSONObject("currentConditions").getDouble("temp")
+                currentTemp = jsonObject.getJSONObject("currentConditions").getDouble("temp")
                 val highTemp = jsonObject.getJSONArray("days")
                     .getJSONObject(0).getDouble("tempmax")
                 val lowTemp = jsonObject.getJSONArray("days")
@@ -56,6 +56,7 @@ class HomeFragment : Fragment() {
                 val resolvedAddress = jsonObject.getString("resolvedAddress")
                 val shortCityName = resolvedAddress.split(",")[0].trim()
                 val currentDate = SimpleDateFormat("EEE, dd MMMM", Locale.getDefault()).format(Date())
+                val birdWatchingPercentage = calculateBirdWatchingConditions(currentTempInt)
 
 
                 // Update UI elements
@@ -65,7 +66,7 @@ class HomeFragment : Fragment() {
                     binding.txtHighLow.text = "${highTempInt}°/${lowTempInt}°"
                     binding.txtCondition.text = description
                     binding.txtCurrentDate.text = currentDate
-
+                    binding.txtWatchingCondition2.text = "${birdWatchingPercentage.toString()}%"
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -78,6 +79,29 @@ class HomeFragment : Fragment() {
 
         return root
     }
+
+    private fun calculateBirdWatchingConditions(currentTempInt: Int): Int {
+        val perfectConditionsRange = 22..25
+        val perfectConditionsPercentage = 100
+
+        val birdWatchingPercentage = when {
+            currentTempInt in perfectConditionsRange -> perfectConditionsPercentage
+            currentTempInt < perfectConditionsRange.first -> {
+                val degreesBelow = perfectConditionsRange.first - currentTempInt
+                perfectConditionsPercentage - degreesBelow * 5
+            }
+            currentTempInt > perfectConditionsRange.last -> {
+                val degreesAbove = currentTempInt - perfectConditionsRange.last
+                perfectConditionsPercentage - degreesAbove * 5
+            }
+            else -> 0 // For temperatures outside the specified range
+        }
+
+        return birdWatchingPercentage
+    }
+
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -28,8 +28,6 @@ class HotspotInfoFragment : Fragment() {
         val hotspotNameTextView = view.findViewById<TextView>(R.id.hotspot_name)
         hotspotNameTextView.text = hotspotName
 
-        val hotspotLocationTextView = view.findViewById<TextView>(R.id.hotspot_location)
-        hotspotLocationTextView.text = "Location: ${hotspotLocation?.latitude}, ${hotspotLocation?.longitude}"
 
         // Add observed birds dynamically
         val birdsObservedList = view.findViewById<LinearLayout>(R.id.birds_observed_list)
