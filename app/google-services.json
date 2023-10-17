@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1038169758846",
+    "project_id": "hadedahunter",
+    "storage_bucket": "hadedahunter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1038169758846:android:cf37e46331999f86ba4c2f",
+        "android_client_info": {
+          "package_name": "com.example.hadedahunter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzYaGfpUOM4ZuEdBaUR4It_-jkGIIPdIc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
