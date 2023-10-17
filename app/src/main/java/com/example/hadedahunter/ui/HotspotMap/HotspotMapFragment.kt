@@ -231,11 +231,20 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback {
                                 }
                             }
 
-                            // Navigate to the new fragment
+
+                            //UPDATED METHOD
+
+                            val popup = HotspotInfoFragment()
+                            popup.show(parentFragmentManager, "HotspotInfoPopup")
+
+
+                            //OLD METHOD
+
+                            /*// Navigate to the new fragment
                             requireActivity().supportFragmentManager.beginTransaction()
                                 .replace(R.id.container, hotspotInfoFragment) // Adjust the container ID if needed
                                 .addToBackStack(null)
-                                .commit()
+                                .commit()*/
                         }
                         true
                     }

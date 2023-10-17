@@ -1,42 +1,46 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="430dp"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    tools:context=".HotspotInfoFragment">
-
-    <TextView
-        android:id="@+id/hotspot_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hotspot Name"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="8dp" />
-
-    <TextView
-        android:id="@+id/birds_observed_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Bird Observed: "
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="8dp" />
+    tools:context="">
 
     <LinearLayout
-        android:id="@+id/birds_observed_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="410dp"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_gravity="center_horizontal" >
+        android:padding="16dp">
 
-        <!-- Add TextViews for each observed bird dynamically in code -->
+        <TextView
+            android:id="@+id/hotspot_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp"
+            android:text="Hotspot Name"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/birds_observed_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp"
+            android:text="Bird Observed: "
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/birds_observed_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <!-- Add TextViews for each observed bird dynamically in code -->
+
+        </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+</FrameLayout>

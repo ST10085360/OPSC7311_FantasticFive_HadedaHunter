@@ -180,16 +180,13 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/button2"
-                android:layout_width="100dp"
+                android:id="@+id/btnLogout"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginStart="155dp"
-                android:layout_marginTop="60dp"
-                android:layout_marginEnd="156dp"
+                android:layout_marginTop="32dp"
                 android:background="@drawable/button_enabled"
-                android:backgroundTint="#2196F3"
-                android:text="Button"
+                android:text="Logout"
+                android:textColor="#FDFDFD"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -198,4 +195,5 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
+
 </FrameLayout>
