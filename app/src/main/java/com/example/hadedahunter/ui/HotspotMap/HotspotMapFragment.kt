@@ -20,15 +20,16 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.Polyline
-import java.io.IOException
 import com.google.maps.DirectionsApi
 import com.google.maps.GeoApiContext
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.maps.android.PolyUtil
 import org.json.JSONArray
 import java.io.BufferedReader
+import java.io.IOException
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
@@ -40,6 +41,10 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback {
     private var userLatitude: Double = 0.0
     private var userLongitude: Double = 0.0
     private var currentPolyline: Polyline? = null
+    private lateinit var locName2 : String
+    private lateinit var comName2 : String
+    private val markerInfoMap = HashMap<Int, MarkerInfo>()
+    private var uniqueId = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -105,18 +110,27 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback {
 
                             val observationLocation = LatLng(lat, lng)
 
-                            // Add a marker to the map
+                            // Generate a unique ID
+                            val markerId = generateUniqueId()
+
                             requireActivity().runOnUiThread {
-                                googleMap.addMarker(
+                                // Add a marker to the map
+                                val marker = googleMap.addMarker(
                                     MarkerOptions()
                                         .position(observationLocation)
-                                        .title("Location: $locName, Bird: $comName")
+                                        .title("Location: $locName")
                                 )
+
+                                // Store marker-specific information
+                                val markerInfo = MarkerInfo(locName, comName)
+                                markerInfoMap[markerId] = markerInfo
+
+                                // Associate the marker with its ID
+                                marker?.tag = markerId
                             }
                         }
                     } else {
                         // Handle HTTP error
-                        // You might want to show an error message to the user
                     }
 
                     connection.disconnect()
@@ -136,7 +150,6 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback {
                     // Set up marker click listener
                     googleMap.setOnMarkerClickListener { marker ->
                         currentPolyline?.remove() // Remove previous polyline
-
 
                         val destination = marker.position
                         val distance = calculateDistance(
@@ -196,32 +209,34 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback {
                     }
 
                     googleMap.setOnInfoWindowClickListener { marker ->
-                        // Extract the information you want to pass to the new layout
-                        val hotspotName = marker.title
-                        val hotspotLocation = marker.position
+                        val markerId = marker?.tag as Int
+                        val markerInfo = markerInfoMap[markerId]
 
-                        // Create a list of birds observed (you'll need to modify this based on your data structure)
-                        val birdsObserved = listOf(
-                            "Egyptian Goose",
-                            "Helmeted Guineafowl",
-                            // Add more observations as needed
-                        )
+                        if (markerInfo != null) {
+                            // Extract the information you want to pass to the new layout
+                            val hotspotName = markerInfo.locName
+                            val hotspotLocation = markerInfo.comName
 
-                        // Create a new instance of HotspotInfoFragment
-                        val hotspotInfoFragment = HotspotInfoFragment().apply {
-                            arguments = Bundle().apply {
-                                putString("hotspotName", hotspotName)
-                                putParcelable("hotspotLocation", hotspotLocation)
-                                putStringArrayList("birdsObserved", ArrayList(birdsObserved))
+                            // Create a list of birds observed (you'll need to modify this based on your data structure)
+                            val birdsObserved = listOf(
+                                markerInfo.comName,
+                                // Add more observations as needed
+                            )
+
+                            // Create a new instance of HotspotInfoFragment
+                            val hotspotInfoFragment = HotspotInfoFragment().apply {
+                                arguments = Bundle().apply {
+                                    putString("hotspotName", hotspotName)
+                                    putStringArrayList("birdsObserved", ArrayList(birdsObserved))
+                                }
                             }
+
+                            // Navigate to the new fragment
+                            requireActivity().supportFragmentManager.beginTransaction()
+                                .replace(R.id.container, hotspotInfoFragment) // Adjust the container ID if needed
+                                .addToBackStack(null)
+                                .commit()
                         }
-
-                        // Navigate to the new fragment
-                        requireActivity().supportFragmentManager.beginTransaction()
-                            .replace(R.id.container, hotspotInfoFragment) // Adjust the container ID if needed
-                            .addToBackStack(null)
-                            .commit()
-
                         true
                     }
 
@@ -231,6 +246,10 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback {
     }
 
 
+    private fun generateUniqueId(): Int {
+        uniqueId++
+        return uniqueId
+    }
 
     private fun calculateDistance(
         startLatitude: Double,
