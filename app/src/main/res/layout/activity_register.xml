@@ -38,18 +38,18 @@
         app:layout_constraintEnd_toEndOf="@id/regCardView"
         app:layout_constraintStart_toStartOf="@id/regCardView"
         app:layout_constraintTop_toTopOf="@id/regCardView">
-        
+
         <LinearLayout
             android:id="@+id/logoLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/card_background">
-            
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/hadedalogo1"
-                android:padding="10dp"/>
+                android:padding="10dp"
+                android:src="@drawable/hadedalogo1" />
 
         </LinearLayout>
 
@@ -91,7 +91,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
-                android:background="@drawable/edit_text_background"
+                android:background="@drawable/edit_text"
                 android:drawableStart="@drawable/baseline_person_24"
                 android:drawablePadding="10dp"
                 android:hint="@string/name"
@@ -106,7 +106,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
-                android:background="@drawable/edit_text_background"
+                android:background="@drawable/edit_text"
                 android:drawableStart="@drawable/baseline_email_24"
                 android:drawablePadding="10dp"
                 android:hint="@string/email"
@@ -121,7 +121,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
-                android:background="@drawable/edit_text_background"
+                android:background="@drawable/edit_text"
                 android:drawableStart="@drawable/baseline_lock_24"
                 android:drawablePadding="10dp"
                 android:hint="@string/password"
@@ -136,7 +136,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:background="@drawable/button_background"
+                android:background="@drawable/button_enabled"
                 android:text="Register"
                 android:textColor="@color/white"
                 android:textSize="20dp"
