@@ -1,5 +1,6 @@
 package com.example.hadedahunter.ui.home
 
+import android.content.Context
 import android.icu.text.SimpleDateFormat
 import android.os.Bundle
 import android.os.Handler
@@ -9,7 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.example.hadedahunter.databinding.FragmentHomeBinding
+import com.example.hadedahunter.ui.HotspotMap.UserViewModel
 import org.json.JSONObject
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
@@ -32,12 +35,11 @@ class HomeFragment : Fragment() {
         val root = binding.root
 
         // Retrieve the user's name from the Intent extras
-        val userName = activity?.intent?.getStringExtra("userName")
-
-        // Make sure userName is not null before displaying it
+        val sharedPreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+        val userName = sharedPreferences.getString("userName", "")
+        val userViewModel: UserViewModel by activityViewModels()
         if (userName != null) {
-            val greetingText = "$userName"
-            binding.txtName.text = greetingText
+            userViewModel.userEmail = userName
         }
 
         // Make API request

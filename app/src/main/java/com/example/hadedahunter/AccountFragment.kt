@@ -76,9 +76,12 @@ class AccountFragment : Fragment() {
         //SETS THE GLOBAL PREFERENCE THE USERS CHOICE FROM THE SPINNER
         measuringSystemSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                // Set the selected measurement system in the ViewModel
-                viewModel.SelectedMeasuringSystem = measuringSystemSpinner.selectedItem as String
-                updateMaxDistance()
+                val selectedMeasurementSystem = measuringSystemSpinner.selectedItem as String
+                if (selectedMeasurementSystem != viewModel.SelectedMeasuringSystem) {
+                    // Set the selected measurement system in the ViewModel
+                    viewModel.SelectedMeasuringSystem = selectedMeasurementSystem
+                    updateMaxDistance()
+                }
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -132,6 +135,9 @@ class AccountFragment : Fragment() {
             Log.d("MaxDistance", "Updated Max Distance: $updatedMaxDistance")
             maxDistanceEditText.setText(String.format("%.2f", updatedMaxDistance))
             viewModel.MaximumDistance = updatedMaxDistance
+            Log.d("MaxDistance", "Selected Measurement System: $selectedMeasurementSystem")
+            Log.d("MaxDistance", "Max Distance Text: $maxDistanceText")
+            Log.d("MaxDistance", "Updated Max Distance: $updatedMaxDistance")
         }
     }
 

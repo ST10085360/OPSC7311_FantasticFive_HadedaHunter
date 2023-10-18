@@ -13,7 +13,9 @@ import android.widget.Button
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.hadedahunter.R
+import com.example.hadedahunter.ui.GlobalPreferences
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.api.ApiException
@@ -50,12 +52,9 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
     private var userLatitude: Double = 0.0
     private var userLongitude: Double = 0.0
     private var currentPolyline: Polyline? = null
-    private lateinit var locName2 : String
-    private lateinit var comName2 : String
     private val markerInfoMap = HashMap<Int, MarkerInfo>()
     private var uniqueId = 0
-
-
+    private lateinit var preferences: GlobalPreferences
 
 
     override fun onCreateView(
@@ -63,6 +62,13 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_hotspot_map, container, false)
+
+        preferences = ViewModelProvider(requireActivity())[GlobalPreferences::class.java]
+
+        // Access the properties
+        val maxDistance = preferences.MaximumDistance.toString()
+        val measuringSystem = preferences.SelectedMeasuringSystem.toString()
+
 
 
         val sharedPreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
@@ -93,6 +99,8 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
             val dialogFragment = AddObservationDialogFragment()
             dialogFragment.setOnObservationAddedListener(this)
             dialogFragment.show(childFragmentManager, "AddObservationDialog")
+            Log.d("Preferences distance", ": $maxDistance")
+            Log.d("Preferences system", ": $measuringSystem")
         }
 
         return view
@@ -150,6 +158,14 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
                                         .title("Location: $locName")
                                 )
 
+                                // Calculate distance
+                                val distance = calculateDistance(userLatitude, userLongitude, lat, lng)
+
+                                // Check against max distance
+                                if (distance > preferences.MaximumDistance) {
+                                    marker?.remove()
+                                }
+
                                 // Store marker-specific information
                                 val markerInfo = MarkerInfo(locName, comName)
                                 markerInfoMap[markerId] = markerInfo
@@ -183,17 +199,23 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
                         currentPolyline?.remove() // Remove previous polyline
 
                         val destination = marker.position
-                        val distance = calculateDistance(
+                        var distance = calculateDistance(
                             userLatitude,
                             userLongitude,
                             destination.latitude,
                             destination.longitude
                         )
+
+                        if (preferences.SelectedMeasuringSystem == "Miles") {
+                            distance *= 0.621371
+                        }
+
+                        val measurementUnit = if (preferences.SelectedMeasuringSystem == "Miles") "miles" else "km"
                         val formattedDistance = "%.2f".format(distance).toDouble()
 
                         // Set title and snippet (distance) for the InfoWindow
                         marker.title = "Hotspot: ${marker.title}"
-                        marker.snippet = "Distance: $formattedDistance km"
+                        marker.snippet = "Distance: $formattedDistance $measurementUnit"
                         marker.showInfoWindow()
 
                         // Calculate the route
