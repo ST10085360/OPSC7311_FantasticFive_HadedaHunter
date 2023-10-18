@@ -15,6 +15,10 @@ import com.example.hadedahunter.MainActivity
 import com.example.hadedahunter.R
 import com.example.hadedahunter.ui.HotspotMap.HotspotMapFragment
 import com.example.hadedahunter.ui.HotspotMap.UserViewModel
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 
 class Login : AppCompatActivity() {
 
@@ -25,7 +29,10 @@ class Login : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_login)
+
+        supportActionBar?.hide()
 
         loginButton = findViewById(R.id.btnLogin)
         email = findViewById(R.id.emailEditTxt)

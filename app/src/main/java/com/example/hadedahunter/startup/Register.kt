@@ -23,6 +23,8 @@ class Register : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
+        supportActionBar?.hide()
+
         registerButton = findViewById(R.id.btnRegister)
         registerButton.setOnClickListener(){
             name = findViewById(R.id.nameEditTxt)

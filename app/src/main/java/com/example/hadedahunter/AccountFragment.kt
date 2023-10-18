@@ -15,6 +15,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.hadedahunter.startup.SplashScreen
@@ -51,6 +52,8 @@ class AccountFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_account, container, false)
+
+        (activity as AppCompatActivity).supportActionBar?.hide()
 
         viewModel = ViewModelProvider(requireActivity()).get(GlobalPreferences::class.java)
         userModel = ViewModelProvider(requireActivity()).get(UserViewModel::class.java)
