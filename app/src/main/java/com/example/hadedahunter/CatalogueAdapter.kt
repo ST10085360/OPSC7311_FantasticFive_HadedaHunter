@@ -58,9 +58,9 @@ class CatalogueAdapter(private val context: Context, private val birds: List<Bir
         val appearanceTextView = dialog.findViewById<TextView>(R.id.appearance)
 
         birdNameTextView.text = bird.name
-        scientificNameTextView.text = "Scientific Name: " + bird.scientificName
-        sizeTextView.text = "Size: " + bird.size
-        appearanceTextView.text = "Appearance: " + bird.appearance
+        scientificNameTextView.text = "Scientific name:  " + bird.scientificName
+        sizeTextView.text = "Size:  " + bird.size
+        appearanceTextView.text = "Appearance:  " + bird.appearance
 
         val closeButton = dialog.findViewById<Button>(R.id.closeButton)
         closeButton.setOnClickListener {

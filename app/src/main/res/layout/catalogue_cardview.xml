@@ -38,6 +38,7 @@
                 android:layout_marginTop="35dp"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                android:textColor="@color/black"
                 android:text="Bird Name" />
 
         </LinearLayout>

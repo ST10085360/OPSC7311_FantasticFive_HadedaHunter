@@ -1,38 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_height="250dp"
     android:padding="16dp">
-
-    <Button
-        android:id="@+id/closeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Close"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/birdName"
-        app:layout_constraintHorizontal_bias="1"
-        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/birdName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bird Name"
-        android:textSize="18sp"
+        android:layout_marginBottom="10dp"
+        android:text="Bird Name:"
+        android:textColor="#000000"
+        android:textSize="20sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/scientificName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/closeButton" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/scientificName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Scientific Name"
-        android:textSize="14sp"
+        android:layout_marginTop="10dp"
+        android:textColor="#000000"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/birdName" />
 
@@ -40,8 +33,10 @@
         android:id="@+id/size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Size"
-        android:textSize="14sp"
+        android:layout_marginTop="10dp"
+        android:text="Size:"
+        android:textColor="#000000"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scientificName" />
 
@@ -49,9 +44,25 @@
         android:id="@+id/appearance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Appearance"
-        android:textSize="14sp"
+        android:layout_marginTop="10dp"
+        android:text="Appearance:"
+        android:textColor="#000000"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/size" />
+
+    <Button
+        android:id="@+id/closeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="98dp"
+        android:layout_marginEnd="98dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="#427CBC"
+        android:text="Close"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
