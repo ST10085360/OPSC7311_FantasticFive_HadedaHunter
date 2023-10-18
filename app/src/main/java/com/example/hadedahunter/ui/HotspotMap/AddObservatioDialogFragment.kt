@@ -39,7 +39,7 @@ class AddObservationDialogFragment : DialogFragment() {
         return builder.create()
     }
 
-    fun setOnObservationAddedListener(listener: HotspotMapFragment) {
+    fun setOnObservationAddedListener(listener: OnObservationAddedListener) {
         this.listener = listener
     }
 }

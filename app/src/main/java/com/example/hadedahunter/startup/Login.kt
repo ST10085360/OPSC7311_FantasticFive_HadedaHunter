@@ -4,14 +4,17 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.hadedahunter.MainActivity
 import com.example.hadedahunter.R
 import com.example.hadedahunter.ui.HotspotMap.HotspotMapFragment
+import com.example.hadedahunter.ui.HotspotMap.UserViewModel
 
 class Login : AppCompatActivity() {
 
@@ -29,6 +32,8 @@ class Login : AppCompatActivity() {
         password = findViewById(R.id.passwordEditTxt)
         signUp = findViewById(R.id.noAccount)
 
+        val userViewModel: UserViewModel by viewModels()
+
         loginButton.setOnClickListener {
             val userEmail = email.text.toString()
             val userPassword = password.text.toString()
@@ -45,6 +50,9 @@ class Login : AppCompatActivity() {
 
                 if (userEmail == registeredEmail && userPassword == registeredPassword)
                 {
+                    userViewModel.userEmail = userEmail // Make sure userEmail is not null or empty
+                    Log.d("UserEmail", "User Email: ${userViewModel.userEmail}")
+
                     Toast.makeText(this, "Login successful.", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this, MainActivity::class.java)
 

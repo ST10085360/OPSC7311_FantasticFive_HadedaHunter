@@ -40,6 +40,7 @@
             android:label="@string/app_name">
         </activity>
 
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAv3g9kdO8UbwiCx95YWF--6qDdaUE75Jg" />
