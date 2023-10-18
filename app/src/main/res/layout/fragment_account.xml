@@ -135,31 +135,22 @@
                     <TextView
                         android:id="@+id/txtMaxDistance"
                         android:layout_width="3dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="32dp"
                         android:layout_marginLeft="50dp"
                         android:layout_marginTop="20dp"
                         android:layout_weight="1"
                         android:text="Maximum Distance"
                         android:textSize="16sp" />
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="23dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="bottom"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginBottom="-10dp"
-                        android:layout_weight="1"
-                        android:gravity="bottom">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/txtMaximumDistance"
-                            android:layout_width="167dp"
-                            android:layout_height="30dp"
-                            android:layout_gravity="bottom|right"
-                            android:layout_marginRight="10dp"
-                            android:gravity="bottom"
-                            android:inputType="number"/>
-                    </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txtMaximumDistance"
+                        android:layout_width="167dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|clip_vertical|right"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center"
+                        android:inputType="numberDecimal"
+                        tools:text="50.00" />
 
                 </LinearLayout>
             </LinearLayout>

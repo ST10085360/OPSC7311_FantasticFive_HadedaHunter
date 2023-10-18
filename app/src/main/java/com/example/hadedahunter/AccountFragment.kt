@@ -3,6 +3,7 @@ package com.example.hadedahunter
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,12 +12,14 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.hadedahunter.startup.SplashScreen
 import com.example.hadedahunter.ui.GlobalPreferences
+import com.example.hadedahunter.ui.HotspotMap.UserViewModel
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -29,8 +32,11 @@ class AccountFragment : Fragment() {
     private lateinit var logoutButton: Button
     private lateinit var measuringSystemSpinner: Spinner
     private lateinit var maxDistanceEditText: EditText
+    private lateinit var DisplayName: TextView
+    private lateinit var DisplayEmail: TextView
 
     private  lateinit var viewModel: GlobalPreferences
+    private  lateinit var userModel: UserViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,10 +53,23 @@ class AccountFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_account, container, false)
 
         viewModel = ViewModelProvider(requireActivity()).get(GlobalPreferences::class.java)
+        userModel = ViewModelProvider(requireActivity()).get(UserViewModel::class.java)
+
+
+        DisplayName = view.findViewById(R.id.txtFName)
+        DisplayName.setText(userModel.userName)
+
+        DisplayEmail = view.findViewById(R.id.txtEmail)
+        DisplayEmail.setText(userModel.userEmail)
+
 
 
 
         measuringSystemSpinner = view.findViewById(R.id.spnMeasuringSystem) as Spinner
+        //Setting the global preference for max distance
+        maxDistanceEditText = view.findViewById(R.id.txtMaximumDistance) as EditText
+
+
         FillSpinner()
 
 
@@ -59,23 +78,12 @@ class AccountFragment : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 // Set the selected measurement system in the ViewModel
                 viewModel.SelectedMeasuringSystem = measuringSystemSpinner.selectedItem as String
+                updateMaxDistance()
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 TODO("Not yet implemented")
             }
-        }
-
-
-        //Setting the global preference for max distance
-        maxDistanceEditText = view.findViewById(R.id.txtMaximumDistance) as EditText
-
-        val dist = maxDistanceEditText.text.toString()
-
-        try {
-            viewModel.MaximumDistance = dist.toInt()
-        }catch (e: NumberFormatException){
-            showMessage("Please enter a valid distance...")
         }
 
         logoutButton = view.findViewById(R.id.btnLogout) as Button
@@ -105,6 +113,26 @@ class AccountFragment : Fragment() {
             dialog.show()
         }
         return view
+    }
+
+
+    private fun updateMaxDistance() {
+        val selectedMeasurementSystem = measuringSystemSpinner.selectedItem as String
+        val maxDistanceText = maxDistanceEditText.text.toString()
+        var updatedMaxDistance = 0.0
+
+        if (maxDistanceText.isNotEmpty()) {
+            val maxDistance = maxDistanceText.toDouble()
+            if (selectedMeasurementSystem == "Kilometers"){
+                updatedMaxDistance = maxDistance * 1.621371
+            } else if (selectedMeasurementSystem == "Miles"){
+                updatedMaxDistance = maxDistance / 1.621371
+            }
+            // Log the updatedMaxDistance to ensure that the conversion is correct
+            Log.d("MaxDistance", "Updated Max Distance: $updatedMaxDistance")
+            maxDistanceEditText.setText(String.format("%.2f", updatedMaxDistance))
+            viewModel.MaximumDistance = updatedMaxDistance
+        }
     }
 
     private fun showMessage(message: String){
