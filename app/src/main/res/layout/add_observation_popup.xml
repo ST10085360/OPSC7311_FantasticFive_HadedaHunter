@@ -19,12 +19,4 @@
         android:layout_height="wrap_content"
         android:hint="Common Bird Name"/>
 
-    <Button
-        android:id="@+id/submit_observation_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Submit"
-
-        android:textColor="@color/black"
-        android:backgroundTint="#B1D4E0"/>
 </LinearLayout>

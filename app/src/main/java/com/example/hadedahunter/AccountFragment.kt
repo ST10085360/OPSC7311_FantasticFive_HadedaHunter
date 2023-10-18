@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.hadedahunter.startup.SplashScreen
 import com.example.hadedahunter.ui.GlobalPreferences
@@ -58,12 +59,24 @@ class AccountFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity()).get(GlobalPreferences::class.java)
         userModel = ViewModelProvider(requireActivity()).get(UserViewModel::class.java)
 
+        val sharedPreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+        val userName = sharedPreferences.getString("userName", "")
+        val userViewModel: UserViewModel by activityViewModels()
+        if (userName != null) {
+            userViewModel.userEmail = userName
+            DisplayName = view.findViewById(R.id.txtFName)
+            DisplayName.setText(userName)
+        }
 
-        DisplayName = view.findViewById(R.id.txtFName)
-        DisplayName.setText(userModel.userName)
 
-        DisplayEmail = view.findViewById(R.id.txtEmail)
-        DisplayEmail.setText(userModel.userEmail)
+
+        val userEmail = sharedPreferences.getString("userEmail", "")
+        if (userEmail != null) {
+            userViewModel.userEmail = userEmail
+            DisplayEmail = view.findViewById(R.id.txtEmail)
+            DisplayEmail.setText(userEmail)
+        }
+
 
 
 

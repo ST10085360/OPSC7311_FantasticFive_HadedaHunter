@@ -289,7 +289,7 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
 
 
                             //UPDATED METHOD
-                            hotspotInfoFragment.show(parentFragmentManager, "HotspotInfoPopup")
+                            hotspotInfoFragment.show(parentFragmentManager, "HotspotInfoPopupPopup")
 
 
                             //OLD METHOD
