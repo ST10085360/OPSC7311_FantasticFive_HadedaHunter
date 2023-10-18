@@ -1,14 +1,20 @@
 package com.example.hadedahunter.ui.home
 
+import android.content.Context
 import android.icu.text.SimpleDateFormat
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.example.hadedahunter.databinding.FragmentHomeBinding
+import com.example.hadedahunter.ui.HotspotMap.UserViewModel
 import org.json.JSONObject
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
@@ -28,6 +34,16 @@ class HomeFragment : Fragment() {
     ): View? {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root = binding.root
+
+        val sharedPreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+        val userName = sharedPreferences.getString("userName", "")
+        val userViewModel: UserViewModel by activityViewModels()
+        if (userName != null) {
+            userViewModel.userName = userName
+        } // Make sure userEmail is not null or empty
+
+        Log.d("userName", "userName: ${userViewModel.userName}")
+
 
         // Make API request
         Thread {
@@ -67,6 +83,7 @@ class HomeFragment : Fragment() {
                     binding.txtCondition.text = description
                     binding.txtCurrentDate.text = currentDate
                     binding.txtWatchingCondition2.text = "${birdWatchingPercentage.toString()}%"
+                    binding.txtName.text = userName
                 }
             } catch (e: Exception) {
                 e.printStackTrace()

@@ -1,7 +1,9 @@
 package com.example.hadedahunter.ui.HotspotMap
 
+import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,13 +13,20 @@ import com.example.hadedahunter.R
 import com.google.android.gms.maps.model.LatLng
 
 
-class HotspotInfoFragment : Fragment() {
+class HotspotInfoFragment : DialogFragment() {
+    private lateinit var context: Context
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        this.context = context
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_hotspot_info, container, false)
+        dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
         // Retrieve information from arguments
         val hotspotName = arguments?.getString("hotspotName")

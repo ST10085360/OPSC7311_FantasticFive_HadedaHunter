@@ -1,14 +1,18 @@
 package com.example.hadedahunter.ui.HotspotMap
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.example.hadedahunter.R
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
@@ -20,12 +24,15 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.Polyline
 import com.google.maps.DirectionsApi
 import com.google.maps.GeoApiContext
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.maps.android.PolyUtil
 import org.json.JSONArray
 import java.io.BufferedReader
@@ -34,7 +41,9 @@ import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 
-class HotspotMapFragment : Fragment(), OnMapReadyCallback {
+
+class HotspotMapFragment : Fragment(), OnMapReadyCallback,
+    AddObservationDialogFragment.OnObservationAddedListener {
 
     private lateinit var mapView: MapView
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -46,11 +55,23 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback {
     private val markerInfoMap = HashMap<Int, MarkerInfo>()
     private var uniqueId = 0
 
+
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_hotspot_map, container, false)
+
+
+        val sharedPreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+        val userEmail = sharedPreferences.getString("userEmail", "")
+        val userViewModel: UserViewModel by activityViewModels()
+        if (userEmail != null) {
+            userViewModel.userEmail = userEmail
+        }
+
 
         mapView = view.findViewById(R.id.mapView)
         mapView.onCreate(savedInstanceState)
@@ -67,6 +88,13 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback {
             return null
         }
 
+        val addObservationButton = view.findViewById<Button>(R.id.add_observation_button)
+        addObservationButton.setOnClickListener {
+            val dialogFragment = AddObservationDialogFragment()
+            dialogFragment.setOnObservationAddedListener(this)
+            dialogFragment.show(childFragmentManager, "AddObservationDialog")
+        }
+
         return view
     }
 
@@ -77,6 +105,7 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback {
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             googleMap.isMyLocationEnabled = true
+
 
             // Add markers from API
             Thread {
@@ -138,6 +167,8 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback {
                     e.printStackTrace()
                 }
             }.start()
+
+            readObservationsFromFirebase(googleMap)
 
             // Get the user's location
             fusedLocationClient.lastLocation.addOnSuccessListener { location ->
@@ -231,11 +262,18 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback {
                                 }
                             }
 
-                            // Navigate to the new fragment
+
+                            //UPDATED METHOD
+                            hotspotInfoFragment.show(parentFragmentManager, "HotspotInfoPopup")
+
+
+                            //OLD METHOD
+
+                            /*// Navigate to the new fragment
                             requireActivity().supportFragmentManager.beginTransaction()
                                 .replace(R.id.container, hotspotInfoFragment) // Adjust the container ID if needed
                                 .addToBackStack(null)
-                                .commit()
+                                .commit()*/
                         }
                         true
                     }
@@ -246,9 +284,77 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback {
     }
 
 
+    override fun onObservationAdded(locName: String, comName: String) {
+        val sharedPreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+        val userEmail = sharedPreferences.getString("userEmail", "")
+        val userViewModel: UserViewModel by activityViewModels()
+        if (userEmail != null) {
+            userViewModel.userEmail = userEmail
+        }
+
+        val encodedEmail = userEmail?.replace(".", ",")
+        val observation = Observation(locName, comName, userLatitude, userLongitude, encodedEmail)
+
+        // Add the observation to Firebase
+        val database = FirebaseDatabase.getInstance()
+        val userObservationsRef = database.getReference("Observations/$encodedEmail")
+        userObservationsRef.push().setValue(observation)
+    }
+
+    private fun showAddObservationDialog() {
+        val dialog = AddObservationDialogFragment()
+        dialog.setOnObservationAddedListener(this)
+        dialog.show(parentFragmentManager, "AddObservationDialog")
+    }
+
+
     private fun generateUniqueId(): Int {
         uniqueId++
         return uniqueId
+    }
+
+    private fun readObservationsFromFirebase(googleMap: GoogleMap) {
+        val sharedPreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+        val userEmail = sharedPreferences.getString("userEmail", "")
+        val userViewModel: UserViewModel by activityViewModels()
+        if (userEmail != null) {
+            userViewModel.userEmail = userEmail
+        }
+
+        val encodedEmail = userEmail?.replace(".", ",")
+
+        val database = FirebaseDatabase.getInstance()
+        val userObservationsRef = database.getReference("Observations/$encodedEmail")
+
+        userObservationsRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (childSnapshot in snapshot.children) {
+                    val observation = childSnapshot.getValue(Observation::class.java)
+                    observation?.let {
+                        val observationLocation = LatLng(it.latitude ?: 0.0, it.longitude ?: 0.0)
+
+                        val marker = MarkerOptions()
+                            .position(observationLocation)
+                            .title("Location: ${it.locName}")
+
+                        // Store marker-specific information
+                        val markerInfo = MarkerInfo(it.locName ?: "", it.comName ?: "")
+                        val markerId = generateUniqueId()
+                        markerInfoMap[markerId] = markerInfo
+
+                        // Associate the marker with its ID
+                        val addedMarker = googleMap.addMarker(marker)
+                        if (addedMarker != null) {
+                            addedMarker.tag = markerId
+                        }
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Handle error
+            }
+        })
     }
 
     private fun calculateDistance(

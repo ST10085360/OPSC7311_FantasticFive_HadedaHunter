@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.HotspotMap.HotspotMapFragment">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="375dp"
-        android:layout_height="501dp"
+        android:layout_height="479dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -20,5 +16,15 @@
         android:layout_marginTop="17dp"
         android:padding="10dp" />
 
+    <Button
+        android:id="@+id/add_observation_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="70dp"
+        android:backgroundTint="#B1D4E0"
+        android:onClick="onAddObservationButtonClick"
+        android:text="Add Observation"
+        android:textColor="@color/black" />
 
-</RelativeLayout>
+</FrameLayout>
