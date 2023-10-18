@@ -10,7 +10,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.hadedahunter.R
+import com.example.hadedahunter.ui.GlobalPreferences
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.api.ApiException
@@ -23,14 +25,13 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.Polyline
-import com.google.maps.DirectionsApi
-import com.google.maps.GeoApiContext
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.ktx.Firebase
+import com.google.maps.DirectionsApi
+import com.google.maps.GeoApiContext
 import com.google.maps.android.PolyUtil
 import org.json.JSONArray
 import java.io.BufferedReader
@@ -38,7 +39,7 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
-import com.google.firebase.auth.ktx.auth
+import kotlin.collections.set
 
 
 class HotspotMapFragment : Fragment(), OnMapReadyCallback,
@@ -53,6 +54,8 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
     private lateinit var comName2 : String
     private val markerInfoMap = HashMap<Int, MarkerInfo>()
     private var uniqueId = 0
+
+    private lateinit var preferences: GlobalPreferences
 
     companion object {
         fun newInstance(userEmail: String): HotspotMapFragment {
@@ -70,6 +73,13 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
     ): View? {
         val view = inflater.inflate(R.layout.fragment_hotspot_map, container, false)
         val userEmail = arguments?.getString("userEmail").toString()
+
+        //ALLOWS YOU TO ACCESS THE PREFERENCES
+        preferences = ViewModelProvider(requireActivity()).get(GlobalPreferences::class.java)
+
+        //USE THIS WHERE YOU NEED TO
+        val maxDistance : Int = preferences.MaximumDistance
+        val measuringSystem : String = preferences.SelectedMeasuringSystem
 
         mapView = view.findViewById(R.id.mapView)
         mapView.onCreate(savedInstanceState)
