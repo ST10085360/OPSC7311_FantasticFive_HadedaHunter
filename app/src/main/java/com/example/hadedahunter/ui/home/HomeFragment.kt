@@ -1,20 +1,15 @@
 package com.example.hadedahunter.ui.home
 
-import android.content.Context
 import android.icu.text.SimpleDateFormat
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import com.example.hadedahunter.databinding.FragmentHomeBinding
-import com.example.hadedahunter.ui.HotspotMap.UserViewModel
 import org.json.JSONObject
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
@@ -27,6 +22,7 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private var currentTemp = 0.0;
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,15 +31,14 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root = binding.root
 
-        val sharedPreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
-        val userName = sharedPreferences.getString("userName", "")
-        val userViewModel: UserViewModel by activityViewModels()
+        // Retrieve the user's name from the Intent extras
+        val userName = activity?.intent?.getStringExtra("userName")
+
+        // Make sure userName is not null before displaying it
         if (userName != null) {
-            userViewModel.userName = userName
-        } // Make sure userEmail is not null or empty
-
-        Log.d("userName", "userName: ${userViewModel.userName}")
-
+            val greetingText = "$userName"
+            binding.txtName.text = greetingText
+        }
 
         // Make API request
         Thread {
@@ -95,6 +90,10 @@ class HomeFragment : Fragment() {
         }.start()
 
         return root
+    }
+
+    private fun showMessage(message: String){
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     private fun calculateBirdWatchingConditions(currentTempInt: Int): Int {

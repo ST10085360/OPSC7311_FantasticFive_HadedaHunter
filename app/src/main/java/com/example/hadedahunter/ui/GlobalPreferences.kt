@@ -4,5 +4,5 @@ import androidx.lifecycle.ViewModel
 
 class GlobalPreferences : ViewModel() {
     var SelectedMeasuringSystem: String = ""
-    var MaximumDistance: Int = 0
+    var MaximumDistance: Double = 0.0
 }
