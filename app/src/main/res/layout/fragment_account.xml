@@ -40,23 +40,14 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/textView"
+                        android:id="@+id/detailsHeading"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="40sp"
                         android:text="Personal Details"
-                        android:textSize="22sp" />
-
-                    <ImageButton
-                        android:id="@+id/imageButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="180dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="#FAF9F9"
-                        android:src="@drawable/baseline_edit_24"
-                        app:tint="#070707" />
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"/>
 
                 </LinearLayout>
 
@@ -74,19 +65,9 @@
                         android:layout_marginRight="30dp"
                         android:layout_weight="1"
                         android:background="@drawable/edit_text"
-                        android:text="Mikail"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/txtLName"
-                        android:layout_width="80dp"
-                        android:layout_height="27dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginRight="30dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/edit_text"
-                        android:text="Van Huyssteen"
-                        android:textSize="16sp" />
+                        android:hint="Name"
+                        android:textSize="15sp"
+                        android:textColor="@color/black"/>
                 </LinearLayout>
 
                 <TextView
@@ -96,12 +77,13 @@
                     android:layout_marginLeft="50dp"
                     android:layout_weight="1"
                     android:background="@drawable/edit_text"
-                    android:text="your.email@gmail.com"
-                    android:textSize="16sp" />
+                    android:hint="@string/email"
+                    android:textSize="15sp"
+                    android:textColor="@color/black"/>
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linearLayout3"
+                android:id="@+id/preflinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="32dp"
@@ -111,12 +93,14 @@
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
                 <TextView
-                    android:id="@+id/textView4"
+                    android:id="@+id/preferencesHeading"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="40sp"
                     android:text="Application Preferences"
-                    android:textSize="22sp" />
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -149,7 +133,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/txtMaximumDistance"
+                        android:id="@+id/txtMaxDistance"
                         android:layout_width="3dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="50dp"
@@ -168,32 +152,37 @@
                         android:gravity="bottom">
 
                         <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/txtMaximumDistance"
                             android:layout_width="167dp"
                             android:layout_height="30dp"
                             android:layout_gravity="bottom|right"
                             android:layout_marginRight="10dp"
                             android:gravity="bottom"
-                            android:hint="km" />
+                            android:inputType="number"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
             </LinearLayout>
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnLogout"
-                android:layout_width="wrap_content"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
                 android:background="@drawable/button_enabled"
                 android:text="Logout"
-                android:textColor="#FDFDFD"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
+                app:layout_constraintTop_toBottomOf="@+id/preflinearLayout" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
+
 
 </FrameLayout>
