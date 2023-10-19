@@ -55,6 +55,7 @@ class Login : AppCompatActivity() {
                 val registeredEmail = sharedPreferences.getString("userEmail", "")
                 val registeredPassword = sharedPreferences.getString("userPassword", "")
 
+
                 if (userEmail == registeredEmail && userPassword == registeredPassword)
                 {
                     userViewModel.userEmail = userEmail // Make sure userEmail is not null or empty
