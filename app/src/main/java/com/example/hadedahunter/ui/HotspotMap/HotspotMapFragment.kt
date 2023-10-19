@@ -68,12 +68,12 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
 
         preferences = ViewModelProvider(requireActivity())[GlobalPreferences::class.java]
 
-        // Access the properties
+        // Access the properties from the GlobalPreferences model
         val maxDistance = preferences.MaximumDistance.toString()
         val measuringSystem = preferences.SelectedMeasuringSystem.toString()
 
 
-
+        //access the userEmail from the UserViewModel passed from the login
         val sharedPreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
         val userEmail = sharedPreferences.getString("userEmail", "")
         val userViewModel: UserViewModel by activityViewModels()
@@ -97,6 +97,7 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
             return null
         }
 
+        //set onclick of the add observation button
         val addObservationButton = view.findViewById<Button>(R.id.add_observation_button)
         addObservationButton.setOnClickListener {
             val dialogFragment = AddObservationDialogFragment()
@@ -122,7 +123,7 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
             Thread {
                 try {
                     val url =
-                        URL("https://api.ebird.org/v2/data/obs/geo/recent?lat=-34.0252729658478&lng=25.70184460498627&back=30&maxResults=100&includeProvisional=true&hotspot=true&sort=date&key=h0nip7qkvaqh")
+                        URL("https://api.ebird.org/v2/data/obs/geo/recent?lat=-34.0252729658478&lng=25.70184460498627&back=30&maxResults=200&includeProvisional=true&hotspot=true&sort=date&key=h0nip7qkvaqh")
                     val connection = url.openConnection() as HttpURLConnection
                     connection.requestMethod = "GET"
                     val responseCode = connection.responseCode
@@ -164,8 +165,8 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
                                 // Calculate distance
                                 val distance = calculateDistance(userLatitude, userLongitude, lat, lng)
 
-                                // Check against max distance
-                                if (distance > preferences.MaximumDistance) {
+                                // Check against max distance, if out of distance remove the marker
+                                if (distance > preferences.MaximumDistance && preferences.MaximumDistance > 1) {
                                     marker?.remove()
                                 }
 
@@ -211,7 +212,7 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
 
                         if (preferences.SelectedMeasuringSystem == "Miles") {
                             distance *= 0.621371
-                        }
+                        }//change between km and miles depending on user's preference
 
                         val measurementUnit = if (preferences.SelectedMeasuringSystem == "Miles") "miles" else "km"
                         val formattedDistance = "%.2f".format(distance).toDouble()
