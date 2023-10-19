@@ -6,14 +6,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Filter
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
 
 
 //Adapter for the Catalogue Card View
-class CatalogueAdapter(private val context: Context, private val birds: List<Bird>) : RecyclerView.Adapter<CatalogueAdapter.ViewHolder>() {
+class CatalogueAdapter(private val context: Context) : RecyclerView.Adapter<CatalogueAdapter.ViewHolder>() {
+
+    private val birds = ArrayList<Bird>()
+    private val filteredBirds = ArrayList<Bird>()
+    private var hasResults: Boolean = true
+
+    init {
+        filteredBirds.addAll(birds)
+    }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val birdNameTextView: TextView = itemView.findViewById(R.id.birdNameTextView)
@@ -23,11 +33,34 @@ class CatalogueAdapter(private val context: Context, private val birds: List<Bir
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    val bird = birds[position]
+                    val bird = filteredBirds[position]
                     showBirdDetailsDialog(bird)
                 }
             }
         }
+    }
+
+    fun setData(birds: List<Bird>) {
+        this.birds.clear()
+        this.birds.addAll(birds)
+        filter("")
+    }
+
+    fun filter(query: String) {
+        filteredBirds.clear()
+
+        if (query.isEmpty()) {
+            filteredBirds.addAll(birds) // Reset to all birds if the query is empty
+        } else {
+            val lowercaseQuery = query.toLowerCase()
+            for (bird in birds) {
+                if (bird.name.toLowerCase().contains(lowercaseQuery)) {
+                    filteredBirds.add(bird)
+                }
+            }
+        }
+
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -36,16 +69,14 @@ class CatalogueAdapter(private val context: Context, private val birds: List<Bir
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val bird = birds[position]
+        val bird = filteredBirds.getOrNull(position)
 
-        // Bind the data to the views
-        holder.birdNameTextView.text = bird.name
-        //holder.scientificNameTextView.text = bird.scientificName
-        //holder.appearanceTextView.text = bird.appearance
-        //holder.sizeTextView.text = bird.size
-
-        // Set the placeholder image
-        holder.birdImageView.setImageResource(bird.imageResource)
+        if (bird != null) {
+            holder.birdNameTextView.text = bird.name
+            holder.birdImageView.setImageResource(bird.imageResource)
+        } else {
+            Toast.makeText(context, "No results found!", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun showBirdDetailsDialog(bird: Bird) {
@@ -69,6 +100,6 @@ class CatalogueAdapter(private val context: Context, private val birds: List<Bir
 
         dialog.show()
     }
-    override fun getItemCount() = birds.size
-}
 
+    override fun getItemCount() = filteredBirds.size
+}

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:tag="Birds Catalogue"
     tools:context=".CatalogueFragment">
 
@@ -12,25 +13,22 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchView"
             android:layout_width="match_parent"
-            android:layout_height="62dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="25dp"
-                android:layout_weight="1"
-                android:text="Filter By: " />
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:layout_marginTop="2dp"
+            android:hint="Search by common name"
+            android:iconifiedByDefault="false"
+            android:queryHint="Search birds by common name"
+            app:defaultQueryHint="Search Birds" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvBirds"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_marginBottom="45dp" />
     </LinearLayout>
 
 </FrameLayout>

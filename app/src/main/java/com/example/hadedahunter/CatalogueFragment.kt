@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DataSnapshot
@@ -18,6 +19,7 @@ class CatalogueFragment : Fragment() {
 
     private lateinit var birdAdapter: CatalogueAdapter
     private lateinit var rvBirds: RecyclerView
+    private lateinit var searchView: SearchView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,21 +30,30 @@ class CatalogueFragment : Fragment() {
         rvBirds = view.findViewById(R.id.rvBirds)
         rvBirds.layoutManager = LinearLayoutManager(context)
 
-        // Fetch bird data from Firebase (replace with your own code)
-        // Example:
-        val allBirdsInDb = fetchBirdDataFromFirebase()
-
-        birdAdapter = CatalogueAdapter(requireContext(), allBirdsInDb)
+        birdAdapter = CatalogueAdapter(requireContext())
         rvBirds.adapter = birdAdapter
+
+        searchView = view.findViewById(R.id.searchView)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                birdAdapter.filter(newText ?: "")
+                return true
+            }
+        })
+
+        searchView.queryHint = "Search by common name"
+        val allBirdsInDb = fetchBirdDataFromFirebase()
+        birdAdapter.setData(allBirdsInDb)
 
         return view
     }
 
-    // Replace this with your actual data retrieval logic from Firebase
     private fun fetchBirdDataFromFirebase(): List<Bird> {
         val birds = mutableListOf<Bird>()
-
-        // Replace with your Firebase database reference
         val databaseReference = FirebaseDatabase.getInstance().reference.child("Birds")
 
         databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -53,8 +64,6 @@ class CatalogueFragment : Fragment() {
                         birdSnapshot.child("Scientific Name").getValue(String::class.java) ?: ""
                     val size = birdSnapshot.child("Size").getValue(String::class.java) ?: ""
                     val appearance = birdSnapshot.child("Appearance").getValue(String::class.java) ?: ""
-
-                    // Use a placeholder image resource ID
                     val imageResource = R.drawable.bird_random
 
                     val bird = birdName?.let { Bird(it, scientificName, size, appearance, imageResource) }
@@ -62,13 +71,10 @@ class CatalogueFragment : Fragment() {
                         birds.add(bird)
                     }
                 }
-
-                // Update the RecyclerView with the retrieved data
-                birdAdapter.notifyDataSetChanged()
+                birdAdapter.setData(birds)
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                // Handle errors
                 Log.e("FetchBirdData", "Error fetching data: ${databaseError.message}")
             }
         })
