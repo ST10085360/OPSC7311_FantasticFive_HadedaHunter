@@ -18,6 +18,7 @@ import org.json.JSONObject
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -45,6 +46,18 @@ class HomeFragment : Fragment() {
         if (userName != null) {
             userViewModel.userEmail = userName
         }
+
+        // Getting the current time
+        val currentTime = Calendar.getInstance()
+        val currentHour = currentTime.get(Calendar.HOUR_OF_DAY)
+
+        // Updating the greeting text based on the current time
+        val greeting = when {
+            currentHour in 0..11 -> "Good Morning, "
+            currentHour in 12..16 -> "Good Afternoon, "
+            else -> "Good Evening, "
+        }
+        binding.txtGreeting.text = greeting
 
         // Make API request
         Thread {

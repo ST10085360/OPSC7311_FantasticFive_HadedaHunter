@@ -112,14 +112,6 @@ class AccountFragment : Fragment() {
             builder.setMessage("Are you sure you want to log out?")
             builder.setPositiveButton("Yes") { _, _ ->
                 // User clicks "Yes", logout
-
-                // Clearing user-related data
-                val sharedPreferences = requireActivity().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
-                val editor = sharedPreferences.edit()
-                editor.remove("userEmail")
-                editor.remove("userPassword")
-                editor.apply()
-
                 val intent = Intent(requireContext(), SplashScreen::class.java)
                 startActivity(intent)
                 requireActivity().finish()

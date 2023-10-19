@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.hadedahunter.MainActivity
 import com.example.hadedahunter.R
 
 class Register : AppCompatActivity() {
@@ -49,7 +50,7 @@ class Register : AppCompatActivity() {
                 editor.apply()
 
                 Toast.makeText(baseContext, "Registration successful.", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this,Login::class.java)
+                val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()
             }
