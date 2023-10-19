@@ -166,7 +166,7 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
                                 val distance = calculateDistance(userLatitude, userLongitude, lat, lng)
 
                                 // Check against max distance, if out of distance remove the marker
-                                if (distance > preferences.MaximumDistance && preferences.MaximumDistance > 1) {
+                                if (distance > preferences.MaximumDistance) {
                                     marker?.remove()
                                 }
 
