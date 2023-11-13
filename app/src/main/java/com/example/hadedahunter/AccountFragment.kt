@@ -115,7 +115,6 @@ class AccountFragment : Fragment() {
         logoutButton = view.findViewById(R.id.btnLogout)
         logoutButton.setOnClickListener {
             logout()
-            Toast.makeText(requireContext(), "Logout Successful", Toast.LENGTH_SHORT).show()
         }
         return view
     }
@@ -161,6 +160,7 @@ class AccountFragment : Fragment() {
         builder.setMessage("Are you sure you want to log out?")
         builder.setPositiveButton("Yes") { _, _ ->
             auth.signOut()
+            Toast.makeText(requireContext(), "Logout Successful", Toast.LENGTH_SHORT).show()
             val intent = Intent(requireContext(), Login::class.java)
             startActivity(intent)
         }
