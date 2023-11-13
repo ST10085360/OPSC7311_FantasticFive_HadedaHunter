@@ -1,10 +1,8 @@
 package com.example.hadedahunter.startup
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -13,71 +11,80 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.hadedahunter.MainActivity
 import com.example.hadedahunter.R
-import com.example.hadedahunter.ui.HotspotMap.HotspotMapFragment
 import com.example.hadedahunter.ui.HotspotMap.UserViewModel
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class Login : AppCompatActivity() {
 
     private lateinit var loginButton: Button
-    private lateinit var email: EditText
-    private lateinit var password: EditText
-    private lateinit var signUp: TextView
+
+    public override fun onStart() {
+        super.onStart()
+        // Firebase authentication instance
+        val auth = Firebase.auth
+        // Check if user is signed in (non-null) and update UI accordingly.
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_login)
+        // Firebase authentication instance
+        val auth = Firebase.auth
+        val signUp : TextView = findViewById(R.id.noAccount)
+        signUp.setOnClickListener()
+        {
+            val intent = Intent(this,Register::class.java)
+            startActivity(intent)
+            finish()
+        }
 
         supportActionBar?.hide()
 
         loginButton = findViewById(R.id.btnLogin)
-        email = findViewById(R.id.emailEditTxt)
-        password = findViewById(R.id.passwordEditTxt)
-        signUp = findViewById(R.id.noAccount)
 
         val userViewModel: UserViewModel by viewModels()
 
-        loginButton.setOnClickListener {
+        loginButton.setOnClickListener()
+        {
+            val email: EditText = findViewById(R.id.emailEditTxt)
+            val password: EditText = findViewById(R.id.passwordEditTxt)
+
             val userEmail = email.text.toString()
             val userPassword = password.text.toString()
 
-            if (TextUtils.isEmpty(userEmail) || TextUtils.isEmpty(userPassword))
-            {
-                Toast.makeText(this, "Please enter your email and password", Toast.LENGTH_SHORT).show()
+            if (TextUtils.isEmpty(userEmail)) {
+                Toast.makeText(this, "Enter an email", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
-            else
-            {
-                val sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
-                val registeredEmail = sharedPreferences.getString("userEmail", "")
-                val registeredPassword = sharedPreferences.getString("userPassword", "")
-
-
-                if (userEmail == registeredEmail && userPassword == registeredPassword)
-                {
-                    userViewModel.userEmail = userEmail // Make sure userEmail is not null or empty
-                    Log.d("UserEmail", "User Email: ${userViewModel.userEmail}")
-
-                    Toast.makeText(this, "Login successful.", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, MainActivity::class.java)
-
-                    startActivity(intent)
-                    finish()
-                }
-                else
-                {
-                    Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show()
-                }
+            if (TextUtils.isEmpty(userPassword)) {
+                Toast.makeText(this, "Enter a password", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
-        }
-
-        signUp.setOnClickListener {
-            val intent = Intent(this, Register::class.java)
-            startActivity(intent)
-            finish()
+            auth.signInWithEmailAndPassword(userEmail, userPassword)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful)
+                    {
+                        // If sign in is successful, display a message to the user.
+                        Toast.makeText(baseContext, "Login successful.",
+                            Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this,MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                    else
+                    {
+                        // If sign up fails, display a message to the user.
+                        Toast.makeText(baseContext, "Login failed.",
+                            Toast.LENGTH_SHORT,).show()
+                    }
+            }
         }
     }
 }
