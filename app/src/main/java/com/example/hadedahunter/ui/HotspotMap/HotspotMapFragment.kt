@@ -26,16 +26,19 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.Polyline
-import com.google.maps.DirectionsApi
-import com.google.maps.GeoApiContext
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.ktx.Firebase
+import com.google.maps.DirectionsApi
+import com.google.maps.GeoApiContext
 import com.google.maps.android.PolyUtil
 import org.json.JSONArray
 import java.io.BufferedReader
@@ -43,7 +46,6 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
-
 
 class HotspotMapFragment : Fragment(), OnMapReadyCallback,
     AddObservationDialogFragment.OnObservationAddedListener {
@@ -56,6 +58,7 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
     private val markerInfoMap = HashMap<Int, MarkerInfo>()
     private var uniqueId = 0
     private lateinit var preferences: GlobalPreferences
+    private val viewModel: GlobalPreferences by activityViewModels()
 
 
     override fun onCreateView(
@@ -63,24 +66,18 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_hotspot_map, container, false)
-
         (activity as AppCompatActivity).supportActionBar?.hide()
-
         preferences = ViewModelProvider(requireActivity())[GlobalPreferences::class.java]
 
         // Access the properties from the GlobalPreferences model
         val maxDistance = preferences.MaximumDistance.toString()
         val measuringSystem = preferences.SelectedMeasuringSystem.toString()
 
-
-        //access the userEmail from the UserViewModel passed from the login
+        // access the userEmail from the UserViewModel passed from the login
         val sharedPreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
         val userEmail = sharedPreferences.getString("userEmail", "")
         val userViewModel: UserViewModel by activityViewModels()
-        if (userEmail != null) {
-            userViewModel.userEmail = userEmail
-        }
-
+        userEmail?.let { userViewModel.userEmail = it }
 
         mapView = view.findViewById(R.id.mapView)
         mapView.onCreate(savedInstanceState)
@@ -97,7 +94,7 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
             return null
         }
 
-        //set onclick of the add observation button
+        // set onClick of the add observation button
         val addObservationButton = view.findViewById<Button>(R.id.add_observation_button)
         addObservationButton.setOnClickListener {
             val dialogFragment = AddObservationDialogFragment()
@@ -117,7 +114,6 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             googleMap.isMyLocationEnabled = true
-
 
             // Add markers from API
             Thread {
@@ -160,6 +156,7 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
                                     MarkerOptions()
                                         .position(observationLocation)
                                         .title("Location: $locName")
+                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)) // Set marker color
                                 )
 
                                 // Calculate distance
@@ -179,7 +176,7 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
                             }
                         }
                     } else {
-                        // Handle HTTP error
+                        //nothing
                     }
 
                     connection.disconnect()
@@ -192,9 +189,9 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
 
             // Get the user's location
             fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                if (location != null) {
-                    this@HotspotMapFragment.userLatitude = location.latitude
-                    this@HotspotMapFragment.userLongitude = location.longitude
+                location?.let {
+                    this@HotspotMapFragment.userLatitude = it.latitude
+                    this@HotspotMapFragment.userLongitude = it.longitude
                     val latLng = LatLng(userLatitude, userLongitude)
                     googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
 
@@ -288,13 +285,10 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
                                 }
                             }
 
-
-                            //UPDATED METHOD
+                            // UPDATED METHOD
                             hotspotInfoFragment.show(parentFragmentManager, "HotspotInfoPopupPopup")
 
-
-                            //OLD METHOD
-
+                            // OLD METHOD
                             /*// Navigate to the new fragment
                             requireActivity().supportFragmentManager.beginTransaction()
                                 .replace(R.id.container, hotspotInfoFragment) // Adjust the container ID if needed
@@ -303,20 +297,16 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
                         }
                         true
                     }
-
                 }
             }
         }
     }
 
-
     override fun onObservationAdded(locName: String, comName: String) {
         val sharedPreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
-        val userEmail = sharedPreferences.getString("userEmail", "")
+        val userEmail = Firebase.auth.currentUser?.email.toString()
         val userViewModel: UserViewModel by activityViewModels()
-        if (userEmail != null) {
-            userViewModel.userEmail = userEmail
-        }
+        userEmail?.let { userViewModel.userEmail = it }
 
         val encodedEmail = userEmail?.replace(".", ",")
         val observation = Observation(locName, comName, userLatitude, userLongitude, encodedEmail)
@@ -333,19 +323,15 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
         dialog.show(parentFragmentManager, "AddObservationDialog")
     }
 
-
     private fun generateUniqueId(): Int {
         uniqueId++
         return uniqueId
     }
 
     private fun readObservationsFromFirebase(googleMap: GoogleMap) {
-        val sharedPreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
-        val userEmail = sharedPreferences.getString("userEmail", "")
+        val userEmail = Firebase.auth.currentUser?.email.toString()
         val userViewModel: UserViewModel by activityViewModels()
-        if (userEmail != null) {
-            userViewModel.userEmail = userEmail
-        }
+        userEmail?.let { userViewModel.userEmail = it }
 
         val encodedEmail = userEmail?.replace(".", ",")
 
@@ -362,6 +348,7 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
                         val marker = MarkerOptions()
                             .position(observationLocation)
                             .title("Location: ${it.locName}")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)) // Set the color here
 
                         // Store marker-specific information
                         val markerInfo = MarkerInfo(it.locName ?: "", it.comName ?: "")
@@ -370,15 +357,12 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
 
                         // Associate the marker with its ID
                         val addedMarker = googleMap.addMarker(marker)
-                        if (addedMarker != null) {
-                            addedMarker.tag = markerId
-                        }
+                        addedMarker?.tag = markerId
                     }
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Handle error
             }
         })
     }
@@ -402,6 +386,17 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
     override fun onResume() {
         super.onResume()
         mapView.onResume()
+
+        // Fetch user preferences again when the fragment is resumed
+        val userViewModel: UserViewModel by activityViewModels()
+        val userEmail = userViewModel.userEmail
+
+        viewModel.fetchUserPreferences(userEmail) { preferences ->
+            if (preferences != null) {
+                viewModel.SelectedMeasuringSystem = preferences.measuringSystem
+                viewModel.MaximumDistance = preferences.maximumDistance
+            }
+        }
     }
 
     override fun onPause() {

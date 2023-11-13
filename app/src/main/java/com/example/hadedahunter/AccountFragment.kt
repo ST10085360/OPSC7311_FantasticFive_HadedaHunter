@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.hadedahunter.startup.Login
 import com.example.hadedahunter.ui.GlobalPreferences
 import com.example.hadedahunter.ui.HotspotMap.UserViewModel
+import com.example.hadedahunter.ui.UserPreferences
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -92,31 +93,52 @@ class AccountFragment : Fragment() {
 
         fillSpinner()
 
-        measuringSystemSpinner.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    val selectedMeasurementSystem = measuringSystemSpinner.selectedItem as String
-                    if (selectedMeasurementSystem != viewModel.SelectedMeasuringSystem) {
-                        viewModel.SelectedMeasuringSystem = selectedMeasurementSystem
-                        updateMaxDistance()
-                    }
-                }
-
-                override fun onNothingSelected(p0: AdapterView<*>?) {
-                    // Handle case when nothing is selected if needed
+        measuringSystemSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val selectedMeasurementSystem = measuringSystemSpinner.selectedItem as String
+                if (selectedMeasurementSystem != viewModel.SelectedMeasuringSystem) {
+                    viewModel.SelectedMeasuringSystem = selectedMeasurementSystem
+                    updateMaxDistance()
+                    updateFirebasePreferences()
                 }
             }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                // Handle case when nothing is selected if needed
+            }
+        }
+
+        val userEmail = userViewModel.userEmail
+
+        viewModel.fetchUserPreferences(userEmail) { preferences ->
+            if (preferences != null) {
+                viewModel.SelectedMeasuringSystem = preferences.measuringSystem
+                viewModel.MaximumDistance = preferences.maximumDistance
+
+                // Update UI elements or perform additional actions based on fetched preferences
+                // For example, update the spinner selection and max distance edit text
+                measuringSystemSpinner.setSelection(
+                    (measuringSystemSpinner.adapter as ArrayAdapter<String>).getPosition(viewModel.SelectedMeasuringSystem)
+                )
+                maxDistanceEditText.setText(viewModel.MaximumDistance.toString())
+            }
+        }
 
         logoutButton = view.findViewById(R.id.btnLogout)
         logoutButton.setOnClickListener {
             logout()
         }
         return view
+    }
+
+    private fun updateFirebasePreferences() {
+        val userViewModel: UserViewModel by activityViewModels()
+        val userEmail = Firebase.auth.currentUser?.email.toString()
+        val preferences = UserPreferences(
+            measuringSystem = viewModel.SelectedMeasuringSystem,
+            maximumDistance = viewModel.MaximumDistance
+        )
+        viewModel.updateUserPreferences(userEmail, preferences)
     }
 
     private fun updateMaxDistance() {
