@@ -6,12 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Filter
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 
 
 //Adapter for the Catalogue Card View
@@ -73,7 +72,12 @@ class CatalogueAdapter(private val context: Context) : RecyclerView.Adapter<Cata
 
         if (bird != null) {
             holder.birdNameTextView.text = bird.name
-            holder.birdImageView.setImageResource(bird.imageResource)
+
+            // Load image using Glide
+            Glide.with(context)
+                .load(bird.imageUrl) // Add a new property imageUrl to your Bird class
+                .centerCrop()
+                .into(holder.birdImageView)
         } else {
             Toast.makeText(context, "No results found!", Toast.LENGTH_SHORT).show()
         }

@@ -2,11 +2,11 @@ package com.example.hadedahunter
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DataSnapshot
@@ -63,10 +63,20 @@ class CatalogueFragment : Fragment() {
                     val scientificName =
                         birdSnapshot.child("Scientific Name").getValue(String::class.java) ?: ""
                     val size = birdSnapshot.child("Size").getValue(String::class.java) ?: ""
-                    val appearance = birdSnapshot.child("Appearance").getValue(String::class.java) ?: ""
-                    val imageResource = R.drawable.bird_random
+                    val appearance =
+                        birdSnapshot.child("Appearance").getValue(String::class.java) ?: ""
+                    val imageUrl =
+                        birdSnapshot.child("ImageURL").getValue(String::class.java) ?: ""
 
-                    val bird = birdName?.let { Bird(it, scientificName, size, appearance, imageResource) }
+                    val bird = birdName?.let {
+                        Bird(
+                            it,
+                            scientificName,
+                            size,
+                            appearance,
+                            imageUrl
+                        )
+                    }
                     if (bird != null) {
                         birds.add(bird)
                     }
