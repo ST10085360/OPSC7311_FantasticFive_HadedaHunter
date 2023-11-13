@@ -1,44 +1,33 @@
 package com.example.hadedahunter.startup
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
-import android.widget.Button
-import android.widget.ImageView
+import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import com.example.hadedahunter.R
 
 class SplashScreen : AppCompatActivity() {
 
-    private lateinit var registerButton: Button
-    private lateinit var loginButton: Button
+    private val SPLASH_DELAY: Long = 5000
+    private lateinit var mediaPlayer: MediaPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
-        registerButton = findViewById(R.id.btnRegister)
-        registerButton.setOnClickListener{
-            val intent =  Intent(this, Register::class.java)
-            startActivity(intent)
-            finish()
-        }
 
-        loginButton = findViewById(R.id.btnLogin)
-        loginButton.setOnClickListener{
-            val intent =  Intent(this, Login::class.java)
-            startActivity(intent)
-            finish()
-        }
+        mediaPlayer = MediaPlayer.create(this, R.raw.hadeda_call)
+        Handler().postDelayed({
 
-        var image : ImageView = findViewById(R.id.hadedaLogo)
-        image.alpha = 0f
-        image.animate().setDuration(5000).alpha(1f).withEndAction() {
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-        }
-        var image2 : ImageView = findViewById(R.id.birdsFlocking)
-        image2.alpha = 0f
-        image2.animate().setDuration(5000).alpha(1f).withEndAction() {
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-        }
+            val intent = Intent(this, Login::class.java)
+            startActivity(intent)
+
+            mediaPlayer.release()
+
+            finish()
+
+        }, SPLASH_DELAY)
+        mediaPlayer.start()
     }
 }
