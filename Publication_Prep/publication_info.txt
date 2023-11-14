@@ -1,0 +1,16 @@
+App Name: Hadeda Hunter
+
+Description:
+Hadeda Hunter is an all in one platform, created to benifit any adventurous person
+in their ventures. This application can be used to log your observations, collaberate
+ with other bird watchers, and ensure that you go out watching, knowing that the
+conditions are optimal. Features that make it stand out include:
+- Weather tile that provides information on the forcast for the day
+- Bird watching conditions that are calculated based off the perfect weather conditions
+- Observation logging
+- Hotspot viewing 
+- Hotspot saving
+- Personal preferences(Hotspot radius)
+- Catalogue of birds
+These features alone prove that this app will assist you and improve your bird watching
+experience.
