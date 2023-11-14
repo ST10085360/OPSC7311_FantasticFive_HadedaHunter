@@ -184,16 +184,7 @@
             android:layout_height="150sp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="30sp"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:id="@+id/StatusLayout"
-                android:layout_width="139dp"
-                android:layout_height="match_parent"
-                android:layout_margin="15sp"
-                android:background="@drawable/statustile"
-                android:orientation="vertical"></LinearLayout>
-        </LinearLayout>
+            android:orientation="horizontal"/>
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
