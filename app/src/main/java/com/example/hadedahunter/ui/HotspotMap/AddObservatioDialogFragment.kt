@@ -3,6 +3,7 @@ package com.example.hadedahunter.ui.HotspotMap
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -110,6 +111,9 @@ class AddObservationDialogFragment : DialogFragment() {
                     val selectedImageUri = data?.data
                     if (selectedImageUri != null) {
                         loadImageFromUri(selectedImageUri)
+                        // Set capturedImageBitmap from the loaded image
+                        val inputStream = requireContext().contentResolver.openInputStream(selectedImageUri)
+                        capturedImageBitmap = BitmapFactory.decodeStream(inputStream)
                     }
                 }
             }
