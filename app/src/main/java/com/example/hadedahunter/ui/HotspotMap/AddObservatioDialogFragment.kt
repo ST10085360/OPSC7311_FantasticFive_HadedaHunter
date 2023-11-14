@@ -1,8 +1,6 @@
 package com.example.hadedahunter.ui.HotspotMap
 
 import android.app.Activity
-import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -68,9 +66,7 @@ class AddObservationDialogFragment : DialogFragment() {
             }
         }
 
-        // Handle dialog dismissal
         dialog?.setOnDismissListener {
-            // Additional logic when the dialog is dismissed, if needed
         }
     }
 
@@ -112,22 +108,15 @@ class AddObservationDialogFragment : DialogFragment() {
                 REQUEST_IMAGE_UPLOAD -> {
                     // Handle the result of image upload from the gallery
                     val selectedImageUri = data?.data
-                    // Now, you can handle the selectedImageUri as needed
-                    // For example, you can use it to load the selected image into an ImageView
-                    // For simplicity, let's assume you have a method loadImageFromUri
                     if (selectedImageUri != null) {
                         loadImageFromUri(selectedImageUri)
                     }
                 }
-                // Add cases for other request codes if needed
             }
         }
     }
 
     private fun loadImageFromUri(uri: Uri) {
-        // Implement logic to load the selected image into the ImageView
-        // You might use an image loading library like Glide or Picasso for efficiency
-        // Example using Glide:
         Glide.with(requireContext())
             .load(uri)
             .into(birdImageView!!)
@@ -140,6 +129,5 @@ class AddObservationDialogFragment : DialogFragment() {
     companion object {
         private const val REQUEST_IMAGE_CAPTURE = 101
         private const val REQUEST_IMAGE_UPLOAD = 102
-        // Add any other constants if needed...
     }
 }

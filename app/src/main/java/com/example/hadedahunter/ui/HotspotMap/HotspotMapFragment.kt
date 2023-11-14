@@ -1,6 +1,5 @@
 package com.example.hadedahunter.ui.HotspotMap
 
-import Observation
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
@@ -313,7 +312,7 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
         userEmail?.let { userViewModel.userEmail = it }
 
         val encodedEmail = userEmail?.replace(".", ",")
-        val observation = Observation(locName, comName, userLatitude, userLongitude, encodedEmail, "")
+        val observation = Observation(locName, comName, userLatitude, userLongitude, encodedEmail, null) // Set imageUrl to null initially
 
         // Add the observation to Firebase
         val database = FirebaseDatabase.getInstance()
@@ -333,7 +332,7 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
             val uploadTask = imagesRef.putBytes(data)
             uploadTask.addOnSuccessListener { taskSnapshot ->
                 // Image uploaded successfully
-                taskSnapshot.metadata?.reference?.downloadUrl?.addOnSuccessListener { downloadUrl ->
+                imagesRef.downloadUrl.addOnSuccessListener { downloadUrl ->
                     // Save the image URL to the observation object
                     observation.imageUrl = downloadUrl.toString()
 
@@ -350,6 +349,8 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
     }
 
 
+
+
     private fun generateUniqueId(): Int {
         uniqueId++
         return uniqueId
@@ -364,7 +365,6 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
 
         val database = FirebaseDatabase.getInstance()
         val userObservationsRef = database.getReference("Observations/$encodedEmail")
-        Log.d("encodedEmail correct", "email right:$encodedEmail")
 
         userObservationsRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
