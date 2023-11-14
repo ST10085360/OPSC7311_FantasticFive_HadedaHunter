@@ -364,6 +364,7 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
 
         val database = FirebaseDatabase.getInstance()
         val userObservationsRef = database.getReference("Observations/$encodedEmail")
+        Log.d("encodedEmail correct", "email right:$encodedEmail")
 
         userObservationsRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {

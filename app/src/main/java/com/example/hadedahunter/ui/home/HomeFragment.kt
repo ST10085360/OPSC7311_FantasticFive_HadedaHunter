@@ -5,6 +5,7 @@ import android.icu.text.SimpleDateFormat
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,8 +13,19 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.hadedahunter.ObservationAdapter
+import com.example.hadedahunter.R
 import com.example.hadedahunter.databinding.FragmentHomeBinding
+import com.example.hadedahunter.ui.HotspotMap.Observation
 import com.example.hadedahunter.ui.HotspotMap.UserViewModel
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.ktx.Firebase
 import org.json.JSONObject
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
@@ -25,6 +37,7 @@ import java.util.Locale
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
+    private lateinit var observationAdapter: ObservationAdapter
     private val binding get() = _binding!!
     private var currentTemp = 0.0;
 
@@ -108,7 +121,59 @@ class HomeFragment : Fragment() {
 
         }.start()
 
+        // Initialize RecyclerView and ObservationAdapter
+        val observationsRecyclerView = root.findViewById<RecyclerView>(R.id.observationsRecyclerView)
+        observationsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        observationAdapter = ObservationAdapter(emptyList()) // Initialize with an empty list
+        observationsRecyclerView.adapter = observationAdapter
+
+        // Fetch observations from Firebase
+        readObservationsFromFirebase()
+
         return root
+    }
+
+    private fun readObservationsFromFirebase() {
+        val userViewModel: UserViewModel by activityViewModels()
+        val userEmail = Firebase.auth.currentUser?.email.toString()
+        userEmail?.let { userViewModel.userEmail = it }
+
+        if (userEmail != null) {
+            val encodedEmail = userEmail.replace(".", ",")
+
+            val database = FirebaseDatabase.getInstance()
+            val userObservationsRef = database.getReference("Observations/$encodedEmail")
+
+            Log.d("EncodedEmail", "Email: $encodedEmail")
+            userObservationsRef.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    Log.d("ObservationData", "Number of children: ${snapshot.childrenCount}")
+
+                    val observations = mutableListOf<Observation>()
+
+                    for (childSnapshot in snapshot.children) {
+                        val observation = childSnapshot.getValue(Observation::class.java)
+                        observation?.let {
+                            observations.add(it)
+                        }
+                    }
+
+                    // Log observations
+                    Log.d("Observations", observations.toString())
+
+                    // Update the ObservationAdapter with the new data
+                    observationAdapter.updateData(observations)
+
+                    Log.d("ObservationData", "Observations: $observations")
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("FirebaseError", "Error fetching observations: ${error.message}")
+                }
+
+            })
+        }
     }
 
     private fun showMessage(message: String){
