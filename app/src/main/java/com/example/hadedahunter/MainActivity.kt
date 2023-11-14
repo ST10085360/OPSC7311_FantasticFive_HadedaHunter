@@ -29,7 +29,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_hotspots, R.id.navigation_home, R.id.navigation_catalogue,  R.id.navigation_account
             )
 
-
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)

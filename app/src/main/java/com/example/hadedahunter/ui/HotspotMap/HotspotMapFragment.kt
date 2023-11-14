@@ -1,5 +1,6 @@
 package com.example.hadedahunter.ui.HotspotMap
 
+import Observation
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
@@ -38,11 +39,13 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.google.maps.DirectionsApi
 import com.google.maps.GeoApiContext
 import com.google.maps.android.PolyUtil
 import org.json.JSONArray
 import java.io.BufferedReader
+import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
@@ -310,13 +313,42 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
         userEmail?.let { userViewModel.userEmail = it }
 
         val encodedEmail = userEmail?.replace(".", ",")
-        val observation = Observation(locName, comName, userLatitude, userLongitude, encodedEmail)
+        val observation = Observation(locName, comName, userLatitude, userLongitude, encodedEmail, "")
 
         // Add the observation to Firebase
         val database = FirebaseDatabase.getInstance()
         val userObservationsRef = database.getReference("Observations/$encodedEmail")
-        userObservationsRef.push().setValue(observation)
+        val observationKey = userObservationsRef.push().key
+
+        // Upload image to Firebase Storage
+        imageBitmap?.let {
+            val storageRef = Firebase.storage.reference
+            val birdNameRef = storageRef.child("Observations/$encodedEmail/$comName")
+            val imagesRef = birdNameRef.child("$observationKey.jpg")
+
+            val baos = ByteArrayOutputStream()
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+            val data = baos.toByteArray()
+
+            val uploadTask = imagesRef.putBytes(data)
+            uploadTask.addOnSuccessListener { taskSnapshot ->
+                // Image uploaded successfully
+                taskSnapshot.metadata?.reference?.downloadUrl?.addOnSuccessListener { downloadUrl ->
+                    // Save the image URL to the observation object
+                    observation.imageUrl = downloadUrl.toString()
+
+                    // Save observation with image URL to Firebase Realtime Database
+                    userObservationsRef.child(observationKey ?: "").setValue(observation)
+                }
+            }.addOnFailureListener {
+                // Handle failure
+            }
+        } ?: run {
+            // If imageBitmap is null, save observation without an image
+            userObservationsRef.child(observationKey ?: "").setValue(observation)
+        }
     }
+
 
     private fun generateUniqueId(): Int {
         uniqueId++
