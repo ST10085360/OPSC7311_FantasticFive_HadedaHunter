@@ -1,22 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:padding="16dp">
+
+    <TextView
+        android:id="@+id/header_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:text="Add or Take a Picture of the Bird"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/bird_image_image_view"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_below="@id/header_text_view"
+        android:layout_marginTop="8dp"
+        android:background="#f0f0f0"
+        android:scaleType="centerCrop"
+        android:src="@drawable/baseline_add_a_photo_24" />
+
+    <TextView
+        android:id="@+id/suggestion_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginTop="60dp"
+        android:layout_toRightOf="@id/bird_image_image_view"
+        android:text="Suggestion: Capture or upload an image of the bird to help with identification."
+        android:textSize="14sp" />
 
     <EditText
         android:id="@+id/location_name_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Location Name"/>
+        android:layout_below="@id/bird_image_image_view"
+        android:layout_marginTop="16dp"
+        android:hint="Location Name" />
 
     <EditText
         android:id="@+id/common_bird_name_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Common Bird Name"/>
+        android:layout_below="@id/location_name_edit_text"
+        android:layout_marginTop="8dp"
+        android:hint="Common Bird Name" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/common_bird_name_edit_text"
+        android:layout_marginTop="16dp"
+        android:text="Cancel"
+        android:onClick="onCancelClick"/>
+
+    <Button
+        android:id="@+id/btnAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/common_bird_name_edit_text"
+        android:layout_marginTop="16dp"
+        android:layout_toEndOf="@id/btnCancel"
+        android:layout_marginStart="8dp"
+        android:text="Add"
+        android:onClick="onAddClick"/>
+</RelativeLayout>

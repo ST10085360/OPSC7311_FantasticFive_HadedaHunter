@@ -3,6 +3,7 @@ package com.example.hadedahunter.ui.HotspotMap
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -302,7 +303,7 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
         }
     }
 
-    override fun onObservationAdded(locName: String, comName: String) {
+    override fun onObservationAdded(locName: String, comName: String, imageBitmap: Bitmap?) {
         val sharedPreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
         val userEmail = Firebase.auth.currentUser?.email.toString()
         val userViewModel: UserViewModel by activityViewModels()
@@ -315,12 +316,6 @@ class HotspotMapFragment : Fragment(), OnMapReadyCallback,
         val database = FirebaseDatabase.getInstance()
         val userObservationsRef = database.getReference("Observations/$encodedEmail")
         userObservationsRef.push().setValue(observation)
-    }
-
-    private fun showAddObservationDialog() {
-        val dialog = AddObservationDialogFragment()
-        dialog.setOnObservationAddedListener(this)
-        dialog.show(parentFragmentManager, "AddObservationDialog")
     }
 
     private fun generateUniqueId(): Int {
