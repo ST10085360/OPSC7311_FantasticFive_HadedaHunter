@@ -16,7 +16,7 @@ class SplashScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
-
+        supportActionBar?.hide()
         mediaPlayer = MediaPlayer.create(this, R.raw.hadeda_call)
         Handler().postDelayed({
 
