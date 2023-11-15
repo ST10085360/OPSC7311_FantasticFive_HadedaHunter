@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -129,6 +130,13 @@ class HomeFragment : Fragment() {
 
         // Fetch observations from Firebase
         readObservationsFromFirebase()
+
+        // Initialize "Back to Top" button
+        val btnBackToTop = root.findViewById<ImageButton>(R.id.btnBackToTop)
+        btnBackToTop.setOnClickListener {
+            // Scroll to the top of the NestedScrollView when the button is clicked
+            binding.nestedScrollView.smoothScrollTo(0, 0)
+        }
 
         return root
     }
